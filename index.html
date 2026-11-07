@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Говори́ — Russian practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@400;700&family=Marck+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ec; --card:#fffdf8; --ink:#1c2230; --muted:#6a6f7c; --line:#e4ded1;
+  --accent:#b8402c; --accent-soft:#f6e1da; --blue:#27466e; --blue-soft:#e3eaf3;
+  --ok:#2c7a4b; --ok-soft:#dff0e5; --warn:#a86a12; --warn-soft:#f7ecd6; --bad:#b33a3a; --bad-soft:#f6dede;
+  --shadow:0 1px 2px rgba(28,34,48,.06),0 4px 14px rgba(28,34,48,.05);
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#14171d;--card:#1c2029;--ink:#ecebe6;--muted:#9aa0ab;--line:#2c313c;
+  --accent:#e3765f;--accent-soft:#3a2420;--blue:#8fb2de;--blue-soft:#1f2a3a;
+  --ok:#6cc08d;--ok-soft:#1b3326;--warn:#e0a84d;--warn-soft:#352a17;--bad:#e57d7d;--bad-soft:#3a2020;
+  --shadow:0 1px 2px rgba(0,0,0,.3);}
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Golos Text",system-ui,sans-serif;font-size:16px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px 90px}
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topin{max-width:980px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px}
+.brand{font-family:"PT Serif",serif;font-weight:700;font-size:22px;letter-spacing:.2px;white-space:nowrap}
+.brand span{color:var(--accent)}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{padding:7px 11px;border-radius:9px;color:var(--muted);text-decoration:none;font-weight:500;font-size:14.5px;white-space:nowrap}
+nav.tabs a:hover{color:var(--ink);background:var(--card)}
+nav.tabs a.on{color:var(--ink);background:var(--card);box-shadow:var(--shadow)}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 10px;font-size:14px}
+h1{font-family:"PT Serif",serif;font-size:30px;line-height:1.2;margin:28px 0 6px}
+h2{font-family:"PT Serif",serif;font-size:21px;margin:26px 0 10px}
+h3{font-size:16px;margin:0 0 6px}
+p.lead{color:var(--muted);margin:0 0 18px;max-width:680px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 14px;font-weight:500;font-size:14.5px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.acc{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.sm{padding:5px 10px;font-size:13.5px;border-radius:8px}
+.btn.ok{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+.btn.warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.btn.bad{background:var(--bad-soft);border-color:transparent;color:var(--bad)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn svg{width:16px;height:16px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 12px;font-size:14px}
+.chip.on{background:var(--blue-soft);border-color:var(--blue);color:var(--blue);font-weight:600}
+.ru{font-family:"PT Serif",serif}
+.sv{color:var(--accent)}
+.ph{color:var(--blue);font-size:14.5px}
+.ph b{font-weight:700}
+.en{color:var(--muted);font-size:14.5px}
+.note{font-size:13.5px;color:var(--warn);background:var(--warn-soft);border-radius:8px;padding:5px 9px;margin-top:8px}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.hide-ph .ph{display:none}
+.notice{border-radius:12px;padding:11px 14px;font-size:14.5px;background:var(--blue-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--blue) 30%,transparent)}
+.notice.w{background:var(--warn-soft);border-color:color-mix(in srgb,var(--warn) 35%,transparent)}
+/* home */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.stat .n{font-size:30px;font-weight:700;font-family:"PT Serif",serif}
+.stat .l{color:var(--muted);font-size:13.5px}
+.go{display:block;text-decoration:none;color:inherit}
+.go:hover{border-color:var(--muted)}
+.go .k{font-family:"PT Serif",serif;font-size:26px;color:var(--accent)}
+/* alphabet */
+.letters{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.lt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 6px 8px;text-align:center;position:relative}
+.lt:hover{border-color:var(--muted)}
+.lt .L{font-family:"PT Serif",serif;font-size:30px;line-height:1.1}
+.lt .s{font-size:12.5px;color:var(--muted)}
+.lt.known::after{content:"";position:absolute;top:7px;right:7px;width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.ghead{display:flex;align-items:baseline;gap:10px;margin:22px 0 8px}
+.ghead h3{margin:0}
+/* phrase cards */
+.pc .ru{font-size:21px;line-height:1.3}
+.pc .acts{margin-top:10px}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(10,12,18,.45);display:none;align-items:flex-start;justify-content:center;z-index:50;padding:5vh 14px;overflow:auto}
+.modal.open{display:flex}
+.sheet{background:var(--card);border-radius:18px;max-width:560px;width:100%;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.25);position:relative}
+.sheet .x{position:absolute;top:12px;right:12px;border:none;background:none;font-size:22px;color:var(--muted)}
+.big{font-family:"PT Serif",serif;font-size:42px;line-height:1.15;margin:4px 0}
+.cursive{font-family:"Marck Script",cursive}
+.result{margin-top:12px;border-radius:10px;padding:10px 12px;font-size:14.5px}
+.result.good{background:var(--ok-soft);color:var(--ok)}
+.result.mid{background:var(--warn-soft);color:var(--warn)}
+.result.low{background:var(--bad-soft);color:var(--bad)}
+.heard .w-ok{color:var(--ok);font-weight:600}
+.heard .w-no{color:var(--bad);text-decoration:underline wavy}
+/* quiz */
+.qbig{font-family:"PT Serif",serif;font-size:56px;text-align:center;margin:10px 0 4px;line-height:1.1}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opt{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px;font-size:16px;text-align:center}
+.opt:hover{border-color:var(--muted)}
+.opt.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:600}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .3s}
+/* dialogue */
+.line{display:flex;gap:10px;margin:10px 0;align-items:flex-start}
+.line .who{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--blue-soft);color:var(--blue)}
+.line.me .who{background:var(--accent-soft);color:var(--accent)}
+.bubble{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 13px;flex:1}
+.bubble .ru{font-size:19px}
+.line.cur .bubble{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.masked{filter:blur(7px);user-select:none}
+/* write */
+.canvas-wrap{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;touch-action:none}
+canvas{display:block;width:100%;touch-action:none}
+.strip{display:flex;gap:4px;overflow-x:auto;padding-bottom:6px}
+.strip button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:8px;width:38px;height:38px;font-family:"PT Serif",serif;font-size:18px}
+.strip button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dict-in{width:100%;font-family:"PT Serif",serif;font-size:28px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);outline:none}
+.dict-in:focus{border-color:var(--blue)}
+.kb{margin-top:12px;display:flex;flex-direction:column;gap:5px;align-items:center}
+.kb .r{display:flex;gap:4px;justify-content:center;flex-wrap:nowrap}
+.kb button{width:clamp(24px,7.4vw,44px);height:44px;border:1px solid var(--line);background:var(--card);border-radius:8px;font-family:"PT Serif",serif;font-size:18px;position:relative;padding:0}
+.kb button small{position:absolute;bottom:1px;right:3px;font-family:"Golos Text";font-size:9px;color:var(--muted)}
+.kb button.wide{width:auto;padding:0 14px;font-family:"Golos Text";font-size:14px}
+.diff .d-ok{color:var(--ok)} .diff .d-no{color:var(--bad);background:var(--bad-soft);border-radius:3px}
+/* rule */
+.rule .ex{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.exb{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 10px;text-align:left}
+.exb .ru{font-size:17px}
+.exb .ph{font-size:13px;display:block}
+.exb .en{font-size:12.5px;display:block}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+label.sw{display:flex;align-items:center;gap:8px;font-size:14.5px;cursor:pointer}
+select{font:inherit;padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+input[type=range]{width:180px}
+@media (max-width:640px){
+  h1{font-size:25px}
+  .brand{font-size:19px}
+  .topin{flex-wrap:wrap;gap:6px}
+  nav.tabs{order:3;flex-basis:100%}
+  .big{font-size:34px}
+  .qbig{font-size:44px}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin">
+  <div class="brand">Говори́<span>.</span></div>
+  <nav class="tabs" id="tabs">
+    <a href="#home" data-v="home">Today</a>
+    <a href="#alphabet" data-v="alphabet">Alphabet</a>
+    <a href="#sounds" data-v="sounds">Sounds</a>
+    <a href="#phrases" data-v="phrases">Phrases</a>
+    <a href="#dialogues" data-v="dialogues">Dialogues</a>
+    <a href="#read" data-v="read">Read</a>
+    <a href="#write" data-v="write">Write</a>
+    <a href="#review" data-v="review">Review</a>
+  </nav>
+  <button class="iconbtn" id="setBtn" title="Settings">⚙︎ Settings</button>
+</div></header>
+<main class="wrap" id="app"></main>
+
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================== DATA ============================== */
+// [Upper, lower, letter name, short sound, tip, example, example phonetic, example meaning, group]
+const LETTERS = [
+["А","а","а","a",'Like "a" in "father" — French "a" in "patte".',"ма́ма","MA-ma","mom",1],
+["Б","б","бэ","b",'Like "b" in "bed".',"брат","brat","brother",3],
+["В","в","вэ","v",'Looks like B, but sounds like "v" in "vase".',"вода́","va-DA","water",2],
+["Г","г","гэ","g",'Always a hard "g" as in "go" — never the soft French "g" of "gel".',"го́род","GO-rat","city",3],
+["Д","д","дэ","d",'A "d" with the tongue touching the teeth, as in French.',"дом","dom","house",3],
+["Е","е","е","ye",'Looks like E, but sounds "ye" as in "yes". After a consonant it softens it: нет = "nyet".',"нет","nyet","no",2],
+["Ё","ё","ё","yo",'"yo" as in "yogurt". Always stressed. Often printed without its dots (as Е).',"ёж","yosh","hedgehog",4],
+["Ж","ж","жэ","zh",'Like French "j" in "jour", but harder, tongue pulled back. Always hard.',"жена́","zhy-NA","wife",4],
+["З","з","зэ","z",'Like "z" in "zoo".',"зима́","zi-MA","winter",3],
+["И","и","и","ee",'"ee" as in "see" — French "i".',"и́мя","EE-mya","first name",3],
+["Й","й","и кра́ткое","y (short)",'A short "y" as in "boy". Almost always after a vowel.',"чай","chai","tea",3],
+["К","к","ка","k",'Like "k", without a puff of air (as in French).',"кот","kot","cat",1],
+["Л","л","эль","l",'A "dark" l: tongue tip on the teeth, back of the tongue raised — like "l" in "full".',"луна́","loo-NA","moon",3],
+["М","м","эм","m",'Like "m".',"мир","meer","world / peace",1],
+["Н","н","эн","n",'Looks like H, but sounds "n".',"нос","nos","nose",2],
+["О","о","о","o",'Stressed: "o" as in "more". Unstressed it sounds like "a"! молоко́ = "ma-la-KO".',"молоко́","ma-la-KO","milk",1],
+["П","п","пэ","p",'A "p" without a puff of air, as in French.',"па́па","PA-pa","dad",3],
+["Р","р","эр","r (rolled)",'Looks like P, but is a rolled or tapped "r" made with the tongue tip (like Spanish/Italian) — not the French throat "r".',"ры́ба","RY-ba","fish",2],
+["С","с","эс","s",'Looks like C, but is always "s" as in "sun".',"сок","sok","juice",2],
+["Т","т","тэ","t",'A "t" with the tongue on the teeth, as in French.',"тут","toot","here",1],
+["У","у","у","oo",'Looks like y, but sounds "oo" — French "ou".',"у́тро","OO-tra","morning",2],
+["Ф","ф","эф","f",'Like "f".',"фо́то","FO-ta","photo",3],
+["Х","х","ха","kh",'Looks like X, but is a throaty "kh" — like German "Bach" or Spanish "jota".',"хлеб","khlyep","bread",2],
+["Ц","ц","цэ","ts",'"ts" as in "cats". Always hard.',"цвет","tsvyet","colour",4],
+["Ч","ч","че","ch",'"ch" as in "cheese". Always soft.',"час","chas","hour",4],
+["Ш","ш","ша","sh",'A hard "sh", tongue pulled back — French "ch" in "chat".',"шко́ла","SHKO-la","school",4],
+["Щ","щ","ща","shch",'A long, soft "sh-sh" — like "fresh sheep" said quickly.',"щи","shchee","cabbage soup",4],
+["Ъ","ъ","твёрдый знак","hard sign",'Hard sign — no sound. It separates a consonant from a following е/ё/ю/я, which keep their "y".',"подъе́зд","pad-YEST","building entrance",5],
+["Ы","ы","ы","y (ы)",'No English or French equivalent. Say "i" with your tongue pulled back, as if starting "oo" but with spread lips.',"сыр","syr","cheese",4],
+["Ь","ь","мя́гкий знак","soft sign",'Soft sign — no sound of its own. It softens the consonant before it (a light "y" quality).',"соль","sol'","salt",5],
+["Э","э","э","e",'"e" as in "bet" — French "è".',"э́то","E-ta","this / it is",3],
+["Ю","ю","ю","yu",'"yu" as in "you".',"юг","yook","south",4],
+["Я","я","я","ya",'"ya" as in "yard". On its own, я means "I".',"я́блоко","YA-bla-ka","apple",4],
+];
+const GROUPS = {
+ 1:["Easy friends","Look and sound like Latin letters."],
+ 2:["False friends","Look Latin, but sound different. The classic trap."],
+ 3:["New shapes, familiar sounds","Unfamiliar shapes for sounds you already make."],
+ 4:["New sounds","The sounds that need real practice."],
+ 5:["Signs","Silent letters that change how others sound."]
+};
+// [russian with stress, phonetic (CAPS = stressed), meaning]
+const WORDS = [
+["ма́ма","MA-ma","mom"],["па́па","PA-pa","dad"],["кот","kot","cat"],["там","tam","there"],["тут","toot","here"],
+["кто","kto","who"],["как","kak","how"],["так","tak","so / like this"],["да","da","yes"],["нет","nyet","no"],
+["вот","vot","here is"],["дом","dom","house"],["сок","sok","juice"],["суп","soop","soup"],["торт","tort","cake"],
+["ко́фе","KO-fye","coffee"],["чай","chai","tea"],["вода́","va-DA","water"],["молоко́","ma-la-KO","milk"],["хлеб","khlyep","bread"],
+["сыр","syr","cheese"],["мя́со","MYA-sa","meat"],["ры́ба","RY-ba","fish"],["я́блоко","YA-bla-ka","apple"],["рис","rees","rice"],
+["сала́т","sa-LAT","salad"],["пи́во","PEE-va","beer"],["вино́","vi-NO","wine"],["вку́сно","FKOOS-na","tasty"],["банк","bank","bank"],
+["такси́","tak-SEE","taxi"],["метро́","mi-TRO","metro"],["авто́бус","af-TO-boos","bus"],["ка́рта","KAR-ta","map / card"],["ко́мната","KOM-na-ta","room"],
+["окно́","ak-NO","window"],["стол","stol","table"],["стул","stool","chair"],["кни́га","KNEE-ga","book"],["ру́чка","ROOCH-ka","pen"],
+["брат","brat","brother"],["сестра́","si-STRA","sister"],["друг","drook","friend"],["жена́","zhy-NA","wife"],["муж","moosh","husband"],
+["сын","syn","son"],["дочь","doch'","daughter"],["семья́","sim'-YA","family"],["рука́","roo-KA","hand / arm"],["нос","nos","nose"],
+["глаз","glas","eye"],["го́род","GO-rat","city"],["у́лица","OO-li-tsa","street"],["шко́ла","SHKO-la","school"],["рабо́та","ra-BO-ta","work"],
+["мир","meer","world / peace"],["день","dyen'","day"],["ночь","noch'","night"],["у́тро","OO-tra","morning"],["ве́чер","VYE-chir","evening"],
+["зима́","zi-MA","winter"],["ле́то","LYE-ta","summer"],["снег","snyek","snow"],["со́лнце","SON-tse","sun"],["врач","vrach","doctor"],
+["щи","shchee","cabbage soup"],["борщ","borshch","borscht"],["ёж","yosh","hedgehog"],["ёлка","YOL-ka","fir tree"],["юг","yook","south"],
+["язы́к","yi-ZYK","language / tongue"],["слова́рь","sla-VAR'","dictionary"],["хорошо́","kha-ra-SHO","good / well"],["пло́хо","PLO-kha","bad / badly"],["спаси́бо","spa-SEE-ba","thank you"],
+["пожа́луйста","pa-ZHA-loos-ta","please"],["ла́дно","LAD-na","OK, fine"],["э́то","E-ta","this / it is"],["что","shto","what"],["где","gdye","where"],
+["почему́","pa-chi-MOO","why"],["сего́дня","si-VOD-nya","today"],["за́втра","ZAF-tra","tomorrow"],["вчера́","fchi-RA","yesterday"],["сейча́с","si-CHAS","now"],
+["ча́сто","CHAS-ta","often"],["фо́то","FO-ta","photo"],["телефо́н","ti-li-FON","phone"],["компью́тер","kam-PYOO-tir","computer"],["цвет","tsvyet","colour"],
+["центр","tsentr","centre"],["подъе́зд","pad-YEST","building entrance"],["Росси́я","ra-SEE-ya","Russia"],["Москва́","mask-VA","Moscow"],["Жене́ва","zhy-NYE-va","Geneva"],
+["Фра́нция","FRAN-tsy-ya","France"]
+];
+// phrase: [ru, phonetic, meaning, note?]
+const PHRASES = {
+ "Greetings":[
+  ["Приве́т!","pri-VYET","Hi! (informal)"],
+  ["Здра́вствуйте!","ZDRAST-vooy-tye","Hello (formal, or to several people)","The first в is silent: say ZDRAST-vooy-tye, not “zdrav-stvooy-tye”."],
+  ["До́брое у́тро!","DOB-ra-ye OO-tra","Good morning"],
+  ["До́брый день!","DOB-ry dyen'","Good afternoon / Good day"],
+  ["До́брый ве́чер!","DOB-ry VYE-chir","Good evening"],
+  ["Как дела́?","kak di-LA","How are you? (informal)"],
+  ["Как у вас дела́?","kak oo vas di-LA","How are you? (formal)"],
+  ["Хорошо́, спаси́бо. А у вас?","kha-ra-SHO, spa-SEE-ba. a oo VAS","Fine, thanks. And you?"],
+  ["Норма́льно.","nar-MAL'-na","Not bad / OK"],
+  ["Пока́!","pa-KA","Bye! (informal)"],
+  ["До свида́ния!","da svi-DA-ni-ya","Goodbye (formal)","до and the noun are said as one word: “dasviDAniya”."]
+ ],
+ "Politeness":[
+  ["Спаси́бо!","spa-SEE-ba","Thank you!"],
+  ["Большо́е спаси́бо!","bal'-SHO-ye spa-SEE-ba","Thank you very much!"],
+  ["Пожа́луйста.","pa-ZHA-loos-ta","Please / You're welcome","In normal speech the й disappears: “pa-ZHA-loos-ta”."],
+  ["Извини́те.","iz-vi-NEE-tye","Excuse me / Sorry (formal)"],
+  ["Я не понима́ю.","ya ni pa-ni-MA-yu","I don't understand."],
+  ["Повтори́те, пожа́луйста.","paf-ta-REE-tye, pa-ZHA-loos-ta","Please repeat."],
+  ["Говори́те ме́дленнее, пожа́луйста.","ga-va-REE-tye MYED-li-ni-ye, pa-ZHA-loos-ta","Please speak more slowly."],
+  ["Вы говори́те по-англи́йски?","vy ga-va-REE-tye pa-an-GLEEY-ski","Do you speak English?"],
+  ["Вы говори́те по-францу́зски?","vy ga-va-REE-tye pa-fran-TSOOS-ki","Do you speak French?"],
+  ["Как сказа́ть по-ру́сски…?","kak ska-ZAT' pa-ROOS-ki","How do you say … in Russian?"]
+ ],
+ "About you":[
+  ["Как вас зову́т?","kak vas za-VOOT","What's your name? (formal)"],
+  ["Как тебя́ зову́т?","kak ti-BYA za-VOOT","What's your name? (informal)"],
+  ["Меня́ зову́т Лора́н.","mi-NYA za-VOOT la-RAN","My name is Laurent."],
+  ["О́чень прия́тно.","O-chin' pri-YAT-na","Nice to meet you."],
+  ["Отку́да вы?","at-KOO-da vy","Where are you from?"],
+  ["Я из Фра́нции.","ya iz FRAN-tsy-i","I'm from France."],
+  ["Я живу́ в Жене́ве.","ya zhy-VOO vzhy-NYE-vye","I live in Geneva.","в is glued to the next word: “vzhyNYEvye”."],
+  ["Я учу́ ру́сский язы́к.","ya oo-CHOO ROOS-kiy yi-ZYK","I'm learning Russian."],
+  ["Я немно́го говорю́ по-ру́сски.","ya nim-NO-ga ga-va-RYU pa-ROOS-ki","I speak a little Russian."]
+ ],
+ "Out & about":[
+  ["Ско́лько э́то сто́ит?","SKOL'-ka E-ta STO-it","How much does this cost?"],
+  ["Где туале́т?","gdye too-a-LYET","Where is the toilet?"],
+  ["Где метро́?","gdye mi-TRO","Where is the metro?"],
+  ["Мо́жно?","MOZH-na","May I? / Is it OK?"],
+  ["Я хочу́ ко́фе.","ya kha-CHOO KO-fye","I'd like a coffee."],
+  ["Чай с молоко́м, пожа́луйста.","chai s ma-la-KOM, pa-ZHA-loos-ta","Tea with milk, please."],
+  ["Счёт, пожа́луйста.","shchot, pa-ZHA-loos-ta","The bill, please.","сч is pronounced like щ — a long, soft “shch”."],
+  ["Кото́рый час?","ka-TO-ry chas","What time is it?"],
+  ["Всё хорошо́.","fsyo kha-ra-SHO","Everything's fine."],
+  ["Помоги́те!","pa-ma-GEE-tye","Help!"]
+ ],
+ "Numbers":[
+  ["оди́н","a-DEEN","1"],["два","dva","2"],["три","tree","3"],["четы́ре","chi-TY-rye","4"],["пять","pyat'","5"],
+  ["шесть","shest'","6"],["семь","syem'","7"],["во́семь","VO-sim'","8"],["де́вять","DYE-vit'","9"],["де́сять","DYE-sit'","10"],
+  ["два́дцать","DVA-tsat'","20"],["сто","sto","100"],["ты́сяча","TY-si-cha","1000"]
+ ]
+};
+// dialogues: lines [speaker A|B, ru, phonetic, meaning]; you play B
+const DIALOGUES = [
+ {title:"Знако́мство",en:"Meeting someone",lines:[
+  ["A","Здра́вствуйте! Меня́ зову́т А́нна.","ZDRAST-vooy-tye! mi-NYA za-VOOT A-na","Hello! My name is Anna."],
+  ["B","Здра́вствуйте! Меня́ зову́т Лора́н. О́чень прия́тно.","ZDRAST-vooy-tye! mi-NYA za-VOOT la-RAN. O-chin' pri-YAT-na","Hello! My name is Laurent. Nice to meet you."],
+  ["A","Мне то́же. Отку́да вы?","mnye TO-zhe. at-KOO-da vy","Likewise. Where are you from?"],
+  ["B","Я из Фра́нции, но живу́ в Жене́ве.","ya iz FRAN-tsy-i, no zhy-VOO vzhy-NYE-vye","I'm from France, but I live in Geneva."],
+  ["A","Вы хорошо́ говори́те по-ру́сски!","vy kha-ra-SHO ga-va-REE-tye pa-ROOS-ki","You speak Russian well!"],
+  ["B","Спаси́бо, я ещё учу́сь.","spa-SEE-ba, ya yi-SHCHO oo-CHOOS'","Thanks, I'm still learning."]
+ ]},
+ {title:"В кафе́",en:"At the café",lines:[
+  ["A","До́брый день! Что вы хоти́те?","DOB-ry dyen'! shto vy kha-TEE-tye","Good afternoon! What would you like?"],
+  ["B","Ко́фе и кусо́к то́рта, пожа́луйста.","KO-fye i koo-SOK TOR-ta, pa-ZHA-loos-ta","A coffee and a slice of cake, please."],
+  ["A","Ко́фе с молоко́м?","KO-fye s ma-la-KOM","Coffee with milk?"],
+  ["B","Нет, без молока́. Спаси́бо.","nyet, byez ma-la-KA. spa-SEE-ba","No, without milk. Thanks."],
+  ["A","Что́-нибудь ещё?","SHTO-ni-boot' yi-SHCHO","Anything else?"],
+  ["B","Нет, всё. Счёт, пожа́луйста.","nyet, fsyo. shchot, pa-ZHA-loos-ta","No, that's all. The bill, please."]
+ ]},
+ {title:"На у́лице",en:"Asking the way",lines:[
+  ["B","Извини́те, где метро́?","iz-vi-NEE-tye, gdye mi-TRO","Excuse me, where's the metro?"],
+  ["A","Иди́те пря́мо, пото́м напра́во.","i-DEE-tye PRYA-ma, pa-TOM na-PRA-va","Go straight on, then right."],
+  ["B","Э́то далеко́?","E-ta da-li-KO","Is it far?"],
+  ["A","Нет, пять мину́т пешко́м.","nyet, pyat' mi-NOOT pish-KOM","No, five minutes on foot."],
+  ["B","Большо́е спаси́бо!","bal'-SHO-ye spa-SEE-ba","Thank you very much!"],
+  ["A","Пожа́луйста!","pa-ZHA-loos-ta","You're welcome!"]
+ ]}
+];
+const RULES = [
+ {t:"1 · Stress decides everything",b:"Russian stress can fall on any syllable and isn't marked in normal texts. The stressed vowel is longer and clearer; the others shrink. Always learn a word with its stress — here it's marked in <span class='sv'>red</span> with an accent. A wrong stress can even change the meaning:",
+  ex:[["за́мок","ZA-mak","castle"],["замо́к","za-MOK","lock"],["му́ка","MOO-ka","torment"],["мука́","moo-KA","flour"]],
+  foot:"The voice on your device may not always stress these pairs differently — trust the red mark."},
+ {t:"2 · Unstressed О sounds like А",b:"This is called а́канье, and it's the #1 giveaway of a foreign accent. Only a <b>stressed</b> о sounds like “o”. Everywhere else it relaxes to “a” (or an even weaker “uh”).",
+  ex:[["молоко́","ma-la-KO","milk"],["хорошо́","kha-ra-SHO","good"],["вода́","va-DA","water"],["Москва́","mask-VA","Moscow"]]},
+ {t:"3 · Unstressed Е and Я sound like И",b:"Before the stress, е and я weaken to a short “i” (ика́нье). Don't say “ye-ZYK” — say “yi-ZYK”.",
+  ex:[["язы́к","yi-ZYK","language"],["сестра́","si-STRA","sister"],["тебя́","ti-BYA","you"],["метро́","mi-TRO","metro"]]},
+ {t:"4 · Hard and soft consonants",b:"Most consonants come in a hard and a soft (palatalised) version. A consonant is soft before <b>е ё и ю я</b> or <b>ь</b>: raise the middle of your tongue toward the roof of your mouth, as if adding a tiny “y”. The difference changes meaning:",
+  ex:[["брат","brat","brother"],["брать","brat'","to take"],["мат","mat","checkmate"],["мать","mat'","mother"],["лук","look","onion"],["люк","lyuk","hatch"]]},
+ {t:"5 · Final consonants lose their voice",b:"At the end of a word, б в г д ж з are pronounced п ф к т ш с. Your vocal cords switch off.",
+  ex:[["хлеб","khlyep","bread"],["друг","drook","friend"],["го́род","GO-rat","city"],["муж","moosh","husband"],["глаз","glas","eye"]]},
+ {t:"6 · Neighbours change each other",b:"Inside a word, a consonant takes the voicing of the one after it: в before к becomes ф, д before к becomes т, с before д becomes з.",
+  ex:[["вку́сно","FKOOS-na","tasty"],["авто́бус","af-TO-boos","bus"],["вчера́","fchi-RA","yesterday"],["во́дка","VOT-ka","vodka"]]},
+ {t:"7 · Silent and surprising letters",b:"A few frequent words aren't read as written: some letters vanish, and г is read “v” in the endings -его/-ого.",
+  ex:[["здра́вствуйте","ZDRAST-vooy-tye","hello"],["со́лнце","SON-tse","sun"],["сего́дня","si-VOD-nya","today"],["что","shto","what"],["пожа́луйста","pa-ZHA-loos-ta","please"]]},
+ {t:"8 · The two hardest sounds: Ы and Р",b:"<b>Ы</b>: say “ee”, then pull your whole tongue back without moving your lips. <b>Р</b>: a tongue-tip trill or tap, like Spanish “pero” — never the French throat r. If you can't trill yet, a single quick tap is fine.",
+  ex:[["ты","ty","you"],["сыр","syr","cheese"],["ры́ба","RY-ba","fish"],["рука́","roo-KA","hand"]]}
+];
+// minimal pairs for ear training: [a, a meaning, b, b meaning, what differs]
+const PAIRS = [
+ ["был","was","бил","hit","ы / и"],["мы́ло","soap","ми́ло","cute","ы / и"],["быть","to be","бить","to beat","ы / и"],
+ ["брат","brother","брать","to take","hard / soft т"],["мат","checkmate","мать","mother","hard / soft т"],
+ ["лук","onion","люк","hatch","у / ю"],["ел","ate","ель","fir tree","hard / soft л"],["у́гол","corner","у́голь","coal","hard / soft л"],
+ ["шар","ball","жар","heat","ш / ж"],["дом","house","том","volume","д / т"],["вес","weight","весь","all","hard / soft с"]
+];
+
+/* ============================== STATE ============================== */
+const LS_KEY = "govori-state-v1";
+const DEFAULT = {srs:{}, known:[], streak:{last:null,count:0}, newToday:{d:null,n:0}, activity:{}, settings:{voice:null,rate:0.9,showPh:true,phonetic:true,newPerDay:10}, readGroups:[1,2], updatedAt:0};
+let S = loadLocal();
+function loadLocal(){
+  try{ const raw = localStorage.getItem(LS_KEY); if(raw){ const o = JSON.parse(raw); return deepMerge(structuredClone(DEFAULT), o);} }catch(e){}
+  return structuredClone(DEFAULT);
+}
+function deepMerge(a,b){ for(const k in b){ if(b[k] && typeof b[k]==="object" && !Array.isArray(b[k]) && a[k] && typeof a[k]==="object" && !Array.isArray(a[k])) deepMerge(a[k],b[k]); else a[k]=b[k]; } return a; }
+let cloud = {ref:null, busy:false, pending:false, timer:null};
+function save(){
+  S.updatedAt = Date.now();
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+  if(cloud.ref){ clearTimeout(cloud.timer); cloud.timer = setTimeout(pushCloud, 1500); }
+}
+async function pushCloud(){
+  if(!cloud.ref) return;
+  if(cloud.busy){ cloud.pending = true; return; }
+  cloud.busy = true;
+  try{ await cloud.ref.set({json: JSON.stringify(S), updatedAt: S.updatedAt}); }catch(e){}
+  cloud.busy = false;
+  if(cloud.pending){ cloud.pending = false; pushCloud(); }
+}
+async function initCloud(){
+  try{
+    if(!window.claude || typeof window.claude.use !== "function") return;
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    if(!db || !user) return;
+    const id = await user.id();
+    if(!id) return;
+    const ref = db.collection("data/users/"+id).doc("state");
+    const snap = await Promise.race([ref.get(), new Promise((_,rej)=>setTimeout(()=>rej("timeout"),10000))]);
+    let data = snap && typeof snap.data === "function" ? snap.data() : snap;
+    cloud.ref = ref;
+    if(data && data.json && (data.updatedAt||0) > (S.updatedAt||0)){
+      S = deepMerge(structuredClone(DEFAULT), JSON.parse(data.json));
+      try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){}
+      applySettings(); route();
+    } else if(S.updatedAt){ pushCloud(); }
+  }catch(e){ /* stay local */ }
+}
+const today = () => { const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+function markActivity(){
+  const t = today();
+  S.activity[t] = (S.activity[t]||0)+1;
+  if(S.streak.last !== t){
+    const y = new Date(); y.setDate(y.getDate()-1);
+    const ys = y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
+    S.streak.count = (S.streak.last === ys) ? S.streak.count+1 : 1;
+    S.streak.last = t;
+  }
+  // keep activity map small
+  const keys = Object.keys(S.activity).sort(); while(keys.length>60){ delete S.activity[keys.shift()]; }
+  save();
+}
+function currentStreak(){
+  if(!S.streak.last) return 0;
+  const y = new Date(); y.setDate(y.getDate()-1);
+  const ys = y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
+  return (S.streak.last===today()||S.streak.last===ys) ? S.streak.count : 0;
+}
+
+/* ============================== HELPERS ============================== */
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const strip = s => s.replace(/́/g,"");
+const norm = s => strip(s).toLowerCase().replace(/ё/g,"е").replace(/[^а-яa-z\s-]/g," ").replace(/-/g," ").replace(/\s+/g," ").trim();
+const stressHTML = s => esc(s).replace(/([аеёиоуыэюяАЕЁИОУЫЭЮЯ]́)/g,'<span class="sv">$1</span>');
+const phHTML = s => esc(s).replace(/([A-Z][A-Z']*)/g,"<b>$1</b>");
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const pick = a => a[Math.floor(Math.random()*a.length)];
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("on"),2200); }
+function lev(a,b){ const m=a.length,n=b.length; if(!m) return n; if(!n) return m; let p=Array.from({length:n+1},(_,i)=>i); for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++){ c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); } p=c; } return p[n]; }
+const sim = (a,b) => { a=norm(a).replace(/ /g,""); b=norm(b).replace(/ /g,""); const L=Math.max(a.length,b.length)||1; return 1-lev(a,b)/L; };
+const ICON = {
+ play:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
+ slow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="7"/><path d="M12 9v4l2 2"/><path d="M10 3h4"/></svg>',
+ mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>',
+ rec:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="currentColor"/></svg>'
+};
+
+/* ============================== SPEECH ============================== */
+let voices = [];
+function loadVoices(){ try{ voices = speechSynthesis.getVoices().filter(v=>/^ru/i.test(v.lang)); }catch(e){ voices=[]; } }
+if("speechSynthesis" in window){ loadVoices(); speechSynthesis.onvoiceschanged = ()=>{ loadVoices(); if(curView==="home") route(); }; }
+function getVoice(){ if(!voices.length) return null; return voices.find(v=>v.name===S.settings.voice) || voices.find(v=>/google/i.test(v.name)) || voices[0]; }
+function speak(text, slow=false, onend){
+  if(!("speechSynthesis" in window)){ toast("This browser can't speak — try Chrome, Edge or Safari."); return; }
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(strip(text).replace(/…/g,""));
+    u.lang = "ru-RU"; const v = getVoice(); if(v) u.voice = v;
+    u.rate = slow ? Math.max(0.45, S.settings.rate*0.62) : S.settings.rate;
+    if(onend){ u.onend = onend; u.onerror = onend; }
+    speechSynthesis.speak(u);
+    if(!v && !voices.length) toast("No Russian voice found on this device — see Settings.");
+  }catch(e){ toast("Couldn't play audio."); }
+}
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let micState = SR ? "unknown" : "unsupported"; // unknown | ok | blocked | unsupported
+const MIC_MSG = {
+ unsupported:"Speech checking isn't available in this browser. Use Chrome or Edge on a computer, with the downloadable copy of this app.",
+ blocked:"The microphone is blocked here (the hosted page can't use it). Open the downloadable copy of this app (russian-practice.html) in Chrome or Edge to get speech checking and recording. Everything else works here."
+};
+function listen(target, onDone){
+  if(micState==="unsupported"||micState==="blocked"){ onDone({error:MIC_MSG[micState]}); return null; }
+  let rec;
+  try{ rec = new SR(); }catch(e){ micState="unsupported"; onDone({error:MIC_MSG.unsupported}); return null; }
+  rec.lang="ru-RU"; rec.interimResults=false; rec.maxAlternatives=5; rec.continuous=false;
+  let done=false;
+  rec.onresult = ev => {
+    done=true; micState="ok";
+    const alts=[...ev.results[0]].map(a=>a.transcript);
+    let best=alts[0]||"", bs=-1;
+    alts.forEach(a=>{ const s=sim(a,target); if(s>bs){bs=s;best=a;} });
+    onDone({heard:best, score:Math.max(0,bs)});
+  };
+  rec.onerror = ev => {
+    done=true;
+    if(ev.error==="not-allowed"||ev.error==="service-not-allowed"||ev.error==="audio-capture"){ micState="blocked"; onDone({error:MIC_MSG.blocked}); }
+    else if(ev.error==="no-speech"){ onDone({error:"I didn't hear anything — try again, a bit closer to the mic."}); }
+    else if(ev.error==="network"){ onDone({error:"Speech checking needs an internet connection."}); }
+    else onDone({error:"Speech check failed ("+ev.error+"). Try again."});
+  };
+  rec.onend = () => { if(!done) onDone({error:"I didn't catch that — try again."}); };
+  try{ rec.start(); }catch(e){ micState="blocked"; onDone({error:MIC_MSG.blocked}); return null; }
+  return rec;
+}
+function wordDiff(target, heard){
+  const tw = norm(target).split(" "), hw = norm(heard).split(" ");
+  const orig = strip(target).replace(/[!?.,…]/g,"").split(/\s+/).filter(Boolean);
+  return orig.map((w,i)=>{ const n=tw[i]||""; const ok=hw.some(h=>sim(h,n)>=0.75); return `<span class="${ok?"w-ok":"w-no"}">${esc(w)}</span>`; }).join(" ");
+}
+// recorder
+let mediaRec=null, recChunks=[], lastRecURL=null;
+async function toggleRecord(btn, onReady){
+  if(mediaRec && mediaRec.state==="recording"){ mediaRec.stop(); return; }
+  if(!navigator.mediaDevices || !window.MediaRecorder){ toast("Recording isn't supported in this browser."); return; }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    recChunks=[]; mediaRec = new MediaRecorder(stream);
+    mediaRec.ondataavailable = e=>recChunks.push(e.data);
+    mediaRec.onstop = ()=>{ stream.getTracks().forEach(t=>t.stop()); if(lastRecURL) URL.revokeObjectURL(lastRecURL); lastRecURL = URL.createObjectURL(new Blob(recChunks,{type:mediaRec.mimeType||"audio/webm"})); btn.innerHTML=ICON.rec+" Record myself"; btn.classList.remove("bad"); onReady(); };
+    mediaRec.start(); btn.innerHTML=ICON.rec+" Stop"; btn.classList.add("bad");
+    setTimeout(()=>{ if(mediaRec && mediaRec.state==="recording") mediaRec.stop(); }, 8000);
+  }catch(e){ micState = SR ? "blocked" : micState; toast("Microphone not available here — use the downloadable copy."); }
+}
+
+/* ============================== MODAL ============================== */
+function openModal(html, onMount){ const m=$("#modal"); $("#sheet").innerHTML='<button class="x" aria-label="Close">×</button>'+html; m.classList.add("open"); $("#sheet .x").onclick=closeModal; if(onMount) onMount($("#sheet")); }
+function closeModal(){ $("#modal").classList.remove("open"); try{speechSynthesis.cancel();}catch(e){} }
+$("#modal").addEventListener("click",e=>{ if(e.target.id==="modal") closeModal(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeModal(); });
+
+// The practice panel: listen, slow, say-it check, record & compare
+function practice(ru, ph, en, note){
+  openModal(`
+    <div class="small muted">Pronunciation practice</div>
+    <div class="big">${stressHTML(ru)}</div>
+    <div class="ph" style="font-size:17px">${phHTML(ph)}</div>
+    <div class="en" style="margin-top:2px">${esc(en)}</div>
+    ${note?`<div class="note">${esc(note)}</div>`:""}
+    <h3 style="margin-top:18px">1 · Listen</h3>
+    <div class="row"><button class="btn pri" id="pl">${ICON.play} Listen</button><button class="btn" id="ps">${ICON.slow} Slowly</button></div>
+    <h3 style="margin-top:16px">2 · Say it</h3>
+    <div class="row"><button class="btn acc" id="say">${ICON.mic} Say it &amp; check</button><button class="btn" id="rec">${ICON.rec} Record myself</button><button class="btn" id="mine" disabled>▶ Play mine</button></div>
+    <div id="res"></div>
+    <p class="small muted" style="margin:14px 0 0">Tip: listen three times, then say it out loud before checking. Exaggerate the <span class="sv">stressed</span> vowel and relax the others.</p>
+  `, sh=>{
+    $("#pl",sh).onclick=()=>speak(ru);
+    $("#ps",sh).onclick=()=>speak(ru,true);
+    const res=$("#res",sh);
+    $("#say",sh).onclick=()=>{
+      res.innerHTML=`<div class="result mid">Listening… speak now.</div>`;
+      listen(ru, r=>{
+        if(r.error){ res.innerHTML=`<div class="notice w" style="margin-top:12px">${esc(r.error)}</div>`; return; }
+        markActivity();
+        const pct=Math.round(r.score*100), cls=pct>=85?"good":pct>=60?"mid":"low";
+        const verdict=pct>=85?"Excellent — that's clearly understood.":pct>=60?"Close — compare the red words and try again.":"Not quite — listen slowly and try again.";
+        res.innerHTML=`<div class="result ${cls}"><b>${pct}%</b> · ${verdict}<div class="heard" style="margin-top:6px;color:var(--ink)">Target: <span class="ru">${wordDiff(ru,r.heard)}</span></div><div class="small" style="color:var(--muted)">Heard: «${esc(r.heard)}»</div></div>`;
+      });
+    };
+    $("#rec",sh).onclick=e=>toggleRecord(e.currentTarget, ()=>{ const b=$("#mine",sh); b.disabled=false; b.onclick=()=>{ const a=new Audio(lastRecURL); a.onended=()=>speak(ru); a.play().catch(()=>{}); }; toast("Recorded. “Play mine” plays you, then the model."); });
+    speak(ru);
+  });
+}
+
+/* ============================== SRS ============================== */
+const ALL_ITEMS = [];
+for(const [cat,list] of Object.entries(PHRASES)) list.forEach(p=>ALL_ITEMS.push({id:"p:"+p[0],ru:p[0],ph:p[1],en:p[2],note:p[3],kind:cat}));
+WORDS.forEach(w=>ALL_ITEMS.push({id:"w:"+w[0],ru:w[0],ph:w[1],en:w[2],kind:"Word"}));
+const ITEM = Object.fromEntries(ALL_ITEMS.map(i=>[i.id,i]));
+// Interleave: phrases first by category order, words mixed in after the first greetings
+const NEW_ORDER = (()=>{ const p=ALL_ITEMS.filter(i=>i.id.startsWith("p:")&&i.kind!=="Numbers"), n=ALL_ITEMS.filter(i=>i.kind==="Numbers"), w=ALL_ITEMS.filter(i=>i.kind==="Word"); const out=[]; let a=0,b=0,c=0; while(a<p.length||b<w.length||c<n.length){ for(let k=0;k<2&&a<p.length;k++) out.push(p[a++]); for(let k=0;k<2&&b<w.length;k++) out.push(w[b++]); if(c<n.length) out.push(n[c++]); } return out; })();
+const INTERVALS=[0,1,2,4,8,16,32,64];
+const dayNum = () => { const d=new Date(); return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/86400000); };
+function dueItems(){ const t=dayNum(); return Object.entries(S.srs).filter(([id,r])=>ITEM[id] && r.due<=t).map(([id])=>ITEM[id]); }
+function newAvailable(){ if(S.newToday.d!==today()) return S.settings.newPerDay; return Math.max(0,S.settings.newPerDay-S.newToday.n); }
+function nextNew(k){ return NEW_ORDER.filter(i=>!S.srs[i.id]).slice(0,k); }
+function grade(id, g){ // g: 0 again, 1 good, 2 easy
+  const r = S.srs[id] || {box:0,due:0,seen:0};
+  if(!S.srs[id]){ if(S.newToday.d!==today()) S.newToday={d:today(),n:0}; S.newToday.n++; }
+  if(g===0) r.box=0; else r.box=Math.min(INTERVALS.length-1, r.box+(g===2?2:1));
+  r.due = dayNum()+(g===0?0:INTERVALS[r.box]); r.seen=(r.seen||0)+1;
+  S.srs[id]=r; markActivity();
+}
+const learnedCount = () => Object.values(S.srs).filter(r=>r.box>=2).length;
+
+/* ============================== VIEWS ============================== */
+let curView="home";
+const VIEWS={home:vHome,alphabet:vAlphabet,sounds:vSounds,phrases:vPhrases,dialogues:vDialogues,read:vRead,write:vWrite,review:vReview};
+function route(){
+  const h=(location.hash||"#home").slice(1); curView = VIEWS[h]?h:"home";
+  document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on",a.dataset.v===curView));
+  try{ speechSynthesis.cancel(); }catch(e){}
+  const app=$("#app"); app.innerHTML=""; VIEWS[curView](app); window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);
+function applySettings(){ document.body.classList.toggle("hide-ph", !S.settings.showPh); }
+
+function voiceNotice(){
+  if(!("speechSynthesis" in window)) return `<div class="notice w">This browser can't play Russian audio. Use Chrome, Edge or Safari.</div>`;
+  if(!voices.length) return `<div class="notice w"><b>No Russian voice detected yet.</b> Chrome on desktop includes “Google русский”. On a Mac: System Settings → Accessibility → Spoken Content → System voice → Manage voices → Russian. On Windows: Settings → Time &amp; language → Speech → Add voices → Russian. On iPhone: Settings → Accessibility → Spoken Content → Voices → Russian.</div>`;
+  return "";
+}
+
+function vHome(app){
+  const due=dueItems().length, nw=Math.min(newAvailable(), nextNew(999).length), known=S.known.length;
+  const PH_ONLY = ALL_ITEMS.filter(i=>i.id.startsWith("p:")&&i.kind!=="Numbers"); const daily = PH_ONLY[(Math.floor(Date.now()/86400000))%PH_ONLY.length];
+  app.innerHTML=`
+  <h1>Добро́ пожа́ловать, Лора́н</h1>
+  <p class="lead">A short daily routine works best: 5 minutes of sounds, 10 of review, and a dialogue out loud. Speak everything you see — your mouth needs the practice as much as your eyes.</p>
+  ${voiceNotice()}
+  <div class="stats">
+    <div class="card stat"><div class="n">${currentStreak()}</div><div class="l">day streak</div></div>
+    <div class="card stat"><div class="n">${due+nw}</div><div class="l">cards to review today</div></div>
+    <div class="card stat"><div class="n">${known}/33</div><div class="l">letters known</div></div>
+    <div class="card stat"><div class="n">${learnedCount()}</div><div class="l">words &amp; phrases learned</div></div>
+  </div>
+  <div class="card pc" style="margin-bottom:12px">
+    <div class="small muted">Phrase of the day</div>
+    <div class="ru" style="font-size:26px">${stressHTML(daily.ru)}</div>
+    <div class="ph">${phHTML(daily.ph)}</div><div class="en">${esc(daily.en)}</div>
+    <div class="row acts"><button class="btn pri sm" id="dl">${ICON.play} Listen</button><button class="btn sm" id="dp">${ICON.mic} Practise</button></div>
+  </div>
+  <h2>Your path</h2>
+  <div class="grid g3">
+    <a class="card go" href="#alphabet"><div class="k">Аа Бб</div><h3>1 · Learn the alphabet</h3><div class="small muted">33 letters in 5 groups, with sounds and a quiz.</div></a>
+    <a class="card go" href="#sounds"><div class="k">о → а</div><h3>2 · Master the sounds</h3><div class="small muted">8 rules behind a good accent, plus ear training.</div></a>
+    <a class="card go" href="#read"><div class="k">кот</div><h3>3 · Read real words</h3><div class="small muted">Only words made of letters you've unlocked.</div></a>
+    <a class="card go" href="#phrases"><div class="k">Приве́т!</div><h3>4 · Everyday phrases</h3><div class="small muted">Greetings, politeness, introductions, numbers.</div></a>
+    <a class="card go" href="#dialogues"><div class="k">А: … Б: …</div><h3>5 · Role-play dialogues</h3><div class="small muted">You play one side of real conversations.</div></a>
+    <a class="card go" href="#write"><div class="k cursive">Пиши́</div><h3>6 · Write &amp; spell</h3><div class="small muted">Trace print and handwriting; dictation.</div></a>
+  </div>
+  <div class="row" style="margin-top:18px"><a class="btn acc" href="#review">Start today's review (${due+nw})</a></div>
+  <p class="small muted" style="margin-top:22px">${micState==="unsupported"?"Speech checking isn't available in this browser.":"Speech checking and self-recording need the downloadable copy opened in Chrome or Edge; on the hosted page, practise by listening and repeating aloud."} Progress is saved automatically.</p>`;
+  $("#dl").onclick=()=>speak(daily.ru); $("#dp").onclick=()=>practice(daily.ru,daily.ph,daily.en,daily.note);
+}
+
+function vAlphabet(app){
+  let html=`<h1>The Cyrillic alphabet</h1><p class="lead">33 letters. Tap one to hear it, see how it's handwritten, and get a pronunciation tip. Mark letters as known as you go — they unlock reading and writing practice.</p>
+  <div class="row" style="margin-bottom:6px"><button class="btn acc" id="lq">Letter quiz</button><span class="small muted">${S.known.length} of 33 marked as known</span></div>`;
+  for(const g of [1,2,3,4,5]){
+    html+=`<div class="ghead"><h3>${g} · ${GROUPS[g][0]}</h3><span class="small muted">${GROUPS[g][1]}</span></div><div class="letters">`;
+    LETTERS.filter(l=>l[8]===g).forEach(l=>{ html+=`<button class="lt ${S.known.includes(l[0])?"known":""}" data-l="${l[0]}"><div class="L">${l[0]}${l[1]}</div><div class="s">${esc(l[3])}</div></button>`; });
+    html+=`</div>`;
+  }
+  app.innerHTML=html;
+  app.querySelectorAll(".lt").forEach(b=>b.onclick=()=>letterCard(b.dataset.l));
+  $("#lq").onclick=()=>letterQuiz();
+}
+function letterCard(U){
+  const l=LETTERS.find(x=>x[0]===U);
+  const known=S.known.includes(U);
+  openModal(`
+    <div class="row" style="gap:22px;align-items:flex-end">
+      <div><div class="small muted">Print</div><div class="ru" style="font-size:76px;line-height:1">${l[0]}${l[1]}</div></div>
+      <div><div class="small muted">Handwriting</div><div class="cursive" style="font-size:76px;line-height:1">${l[0]}${l[1]}</div></div>
+    </div>
+    <div style="margin-top:10px"><b>Sound:</b> ${esc(l[3])} &nbsp;·&nbsp; <span class="muted">name: <span class="ru">${esc(l[2])}</span></span></div>
+    <p style="margin:8px 0">${esc(l[4])}</p>
+    <div class="card" style="background:var(--bg);box-shadow:none">
+      <div class="small muted">Example</div>
+      <div class="ru" style="font-size:28px">${stressHTML(l[5])}</div>
+      <div class="ph">${phHTML(l[6])}</div><div class="en">${esc(l[7])}</div>
+      <div class="row" style="margin-top:8px"><button class="btn pri sm" id="ex">${ICON.play} Listen</button><button class="btn sm" id="exs">${ICON.slow} Slowly</button><button class="btn sm" id="exp">${ICON.mic} Practise</button></div>
+    </div>
+    <div class="row" style="margin-top:14px;justify-content:space-between">
+      <button class="btn sm" id="nm">${ICON.play} Letter name</button>
+      <div class="row"><button class="btn sm" id="prev">←</button><button class="btn sm ${known?"ok":""}" id="kn">${known?"✓ Known":"Mark as known"}</button><button class="btn sm" id="next">→</button></div>
+    </div>`, sh=>{
+      $("#ex",sh).onclick=()=>speak(l[5]); $("#exs",sh).onclick=()=>speak(l[5],true);
+      $("#exp",sh).onclick=()=>practice(l[5],l[6],l[7]);
+      $("#nm",sh).onclick=()=>speak(l[2]);
+      $("#kn",sh).onclick=()=>{ if(S.known.includes(U)) S.known=S.known.filter(x=>x!==U); else S.known.push(U); markActivity(); letterCard(U); if(curView==="alphabet") refreshLetters(); };
+      const i=LETTERS.indexOf(l);
+      $("#prev",sh).onclick=()=>letterCard(LETTERS[(i+32)%33][0]);
+      $("#next",sh).onclick=()=>letterCard(LETTERS[(i+1)%33][0]);
+      speak(l[5]);
+  });
+}
+function refreshLetters(){ document.querySelectorAll(".lt").forEach(b=>b.classList.toggle("known",S.known.includes(b.dataset.l))); }
+function letterQuiz(){
+  let n=0, score=0; const total=12;
+  const pool = shuffle(LETTERS).slice(0,total);
+  function q(){
+    if(n>=total){ openModal(`<h2 style="margin-top:0">Quiz done</h2><p>You got <b>${score}/${total}</b>.</p><p class="muted small">Letters you missed are worth a second look — especially the false friends В Н Р С У Х.</p><div class="row"><button class="btn pri" id="ag">Again</button></div>`,sh=>$("#ag",sh).onclick=letterQuiz); return; }
+    const l=pool[n], lower=Math.random()<.5;
+    const opts=shuffle([l, ...shuffle(LETTERS.filter(x=>x!==l)).slice(0,3)]);
+    openModal(`<div class="progress"><i style="width:${n/total*100}%"></i></div>
+      <div class="small muted" style="margin-top:10px">What sound does this letter make?</div>
+      <div class="qbig">${lower?l[1]:l[0]}</div>
+      <div class="opts">${opts.map(o=>`<button class="opt" data-u="${o[0]}">${esc(o[3])}</button>`).join("")}</div>
+      <div id="fb" style="min-height:60px"></div>`, sh=>{
+        let answered=false;
+        sh.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+          if(answered) return; answered=true;
+          const ok=b.dataset.u===l[0]; if(ok) score++;
+          b.classList.add(ok?"right":"wrong"); sh.querySelector(`.opt[data-u="${l[0]}"]`).classList.add("right");
+          markActivity();
+          $("#fb",sh).innerHTML=`<p class="small" style="margin:12px 0 8px">${esc(l[4])} &nbsp;<span class="ru">${stressHTML(l[5])}</span> — ${esc(l[7])}</p><button class="btn pri sm" id="nx">Next →</button>`;
+          speak(l[5]); $("#nx",sh).onclick=()=>{n++;q();};
+        });
+    });
+  }
+  q();
+}
+
+function exBtn(e){ return `<button class="exb" data-ru="${esc(e[0])}"><span class="ru">${stressHTML(e[0])}</span><span class="ph">${phHTML(e[1])}</span><span class="en">${esc(e[2])}</span></button>`; }
+function vSounds(app){
+  app.innerHTML=`<h1>Sounds &amp; pronunciation</h1><p class="lead">Russian spelling is fairly regular once you know these eight rules. Tap any example to hear it, and say it back each time.</p>
+  ${voiceNotice()}
+  <div class="grid g2" id="rules">${RULES.map(r=>`<div class="card rule"><h3>${r.t}</h3><div class="small">${r.b}</div><div class="ex">${r.ex.map(exBtn).join("")}</div>${r.foot?`<div class="small muted" style="margin-top:8px">${r.foot}</div>`:""}</div>`).join("")}</div>
+  <h2>Ear training</h2>
+  <p class="lead">You'll hear one word from a pair that differs by a single sound. Pick the one you heard. This trains your ear for the contrasts that matter most: ы / и, and hard / soft consonants.</p>
+  <div class="card" id="ear"></div>`;
+  app.querySelectorAll(".exb").forEach(b=>b.onclick=()=>speak(b.dataset.ru));
+  earTrainer($("#ear"));
+}
+function earTrainer(box){
+  let n=0, score=0; const total=10;
+  function q(){
+    if(n>=total){ box.innerHTML=`<h3>Score: ${score}/${total}</h3><p class="small muted">Above 8 means your ear is ready for these contrasts. Below that, replay the pairs in rule 4 and in the alphabet card for Ы.</p><button class="btn pri" id="er">Play again</button>`; $("#er",box).onclick=()=>{n=0;score=0;q();}; return; }
+    const p=pick(PAIRS), first=Math.random()<.5, target=first?p[0]:p[2];
+    box.innerHTML=`<div class="progress"><i style="width:${n/total*100}%"></i></div>
+     <div class="row" style="justify-content:space-between;margin-top:12px"><span class="small muted">Contrast: ${esc(p[4])}</span><span class="small muted">${n+1} / ${total}</span></div>
+     <div class="row" style="justify-content:center;margin:16px 0"><button class="btn pri" id="pp">${ICON.play} Play again</button><button class="btn" id="psl">${ICON.slow} Slowly</button></div>
+     <div class="opts"><button class="opt" data-w="${esc(p[0])}"><span class="ru" style="font-size:26px">${stressHTML(p[0])}</span><br><span class="small muted">${esc(p[1])}</span></button><button class="opt" data-w="${esc(p[2])}"><span class="ru" style="font-size:26px">${stressHTML(p[2])}</span><br><span class="small muted">${esc(p[3])}</span></button></div>
+     <div id="fb" style="min-height:44px;margin-top:10px"></div>`;
+    $("#pp",box).onclick=()=>speak(target); $("#psl",box).onclick=()=>speak(target,true);
+    box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      if(box.dataset.lock==="1") return; box.dataset.lock="1";
+      const ok=b.dataset.w===target; if(ok) score++; markActivity();
+      b.classList.add(ok?"right":"wrong"); [...box.querySelectorAll(".opt")].find(x=>x.dataset.w===target).classList.add("right");
+      $("#fb",box).innerHTML=`<div class="row"><span>${ok?"Right.":"That was <b class='ru'>"+stressHTML(target)+"</b>."} Compare:</span><button class="btn sm" id="ca">${stressHTML(p[0])}</button><button class="btn sm" id="cb">${stressHTML(p[2])}</button><button class="btn pri sm" id="nx">Next →</button></div>`;
+      $("#ca",box).onclick=()=>speak(p[0]); $("#cb",box).onclick=()=>speak(p[2]); $("#nx",box).onclick=()=>{n++;box.dataset.lock="0";q();};
+    });
+    box.dataset.lock="0";
+  }
+  box.innerHTML=`<p style="margin-top:0">10 rounds. Use headphones if you can.</p><button class="btn acc" id="st">Start ear training</button>`;
+  $("#st",box).onclick=()=>{ q(); };
+}
+
+function phraseCard(p){
+  const [ru,ph,en,note]=p;
+  return `<div class="card pc"><div class="ru">${stressHTML(ru)}</div><div class="ph">${phHTML(ph)}</div><div class="en">${esc(en)}</div>${note?`<div class="note">${esc(note)}</div>`:""}
+  <div class="row acts"><button class="btn pri sm" data-a="l">${ICON.play} Listen</button><button class="btn sm" data-a="s">${ICON.slow} Slowly</button><button class="btn sm" data-a="p">${ICON.mic} Practise</button></div></div>`;
+}
+let phraseCat="Greetings";
+function vPhrases(app){
+  const cats=Object.keys(PHRASES);
+  app.innerHTML=`<h1>Everyday phrases</h1><p class="lead">The building blocks of a first conversation. Listen, repeat out loud, then use <b>Practise</b> to drill one in depth. Every phrase also feeds your daily review.</p>
+  <div class="row" id="cats">${cats.map(c=>`<button class="chip ${c===phraseCat?"on":""}" data-c="${c}">${c}</button>`).join("")}</div>
+  <div class="row" style="margin:12px 0"><button class="btn sm" id="all">${ICON.play} Play all in this set</button><label class="sw small"><input type="checkbox" id="tph" ${S.settings.showPh?"checked":""}> Show pronunciation guide</label></div>
+  <div class="grid g2" id="plist"></div>`;
+  const list=$("#plist");
+  function draw(){
+    list.innerHTML=PHRASES[phraseCat].map(phraseCard).join("");
+    list.querySelectorAll(".pc").forEach((c,i)=>{ const p=PHRASES[phraseCat][i];
+      c.querySelector('[data-a="l"]').onclick=()=>speak(p[0]);
+      c.querySelector('[data-a="s"]').onclick=()=>speak(p[0],true);
+      c.querySelector('[data-a="p"]').onclick=()=>practice(...p);
+    });
+  }
+  app.querySelectorAll("#cats .chip").forEach(b=>b.onclick=()=>{ phraseCat=b.dataset.c; app.querySelectorAll("#cats .chip").forEach(x=>x.classList.toggle("on",x===b)); draw(); });
+  $("#tph").onchange=e=>{ S.settings.showPh=e.target.checked; applySettings(); save(); };
+  $("#all").onclick=()=>{ const ps=PHRASES[phraseCat]; let i=0; const cards=list.querySelectorAll(".pc"); const nx=()=>{ cards.forEach(c=>c.style.outline=""); if(i>=ps.length) return; cards[i].style.outline="2px solid var(--accent)"; cards[i].scrollIntoView({block:"nearest",behavior:"smooth"}); speak(ps[i][0],false,()=>setTimeout(nx,1600)); i++; }; nx(); };
+  draw();
+}
+
+let dlgIdx=0;
+function vDialogues(app){
+  const d=DIALOGUES[dlgIdx];
+  app.innerHTML=`<h1>Dialogues</h1><p class="lead">Short real-life exchanges. Listen to the whole thing first, then switch to <b>role-play</b>: the app speaks the other person, and you say your lines (marked <b style="color:var(--accent)">Я</b>) out loud.</p>
+  <div class="row" id="dl">${DIALOGUES.map((x,i)=>`<button class="chip ${i===dlgIdx?"on":""}" data-i="${i}"><span class="ru">${stressHTML(x.title)}</span> · ${esc(x.en)}</button>`).join("")}</div>
+  <div class="row" style="margin:14px 0"><button class="btn pri" id="pa">${ICON.play} Listen to all</button><button class="btn acc" id="rp">Role-play: I'm “Я”</button></div>
+  <div id="dbox"></div>`;
+  app.querySelectorAll("#dl .chip").forEach(b=>b.onclick=()=>{ dlgIdx=+b.dataset.i; vDialogues(app); });
+  const box=$("#dbox");
+  function draw(mask=-1, cur=-1){
+    box.innerHTML=d.lines.map((l,i)=>{ const me=l[0]==="B"; const hidden=me && mask>=0 && i>=mask;
+      return `<div class="line ${me?"me":""} ${i===cur?"cur":""}"><div class="who">${me?"Я":"A"}</div><div class="bubble">
+      <div class="${hidden?"masked":""}"><div class="ru">${stressHTML(l[1])}</div><div class="ph">${phHTML(l[2])}</div></div>
+      <div class="en">${esc(l[3])}</div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-i="${i}" data-a="l">${ICON.play}</button><button class="btn sm" data-i="${i}" data-a="s">${ICON.slow}</button><button class="btn sm" data-i="${i}" data-a="p">${ICON.mic} Practise</button></div></div></div>`; }).join("");
+    box.querySelectorAll("button[data-a]").forEach(b=>{ const l=d.lines[+b.dataset.i];
+      b.onclick=()=>{ if(b.dataset.a==="l") speak(l[1]); else if(b.dataset.a==="s") speak(l[1],true); else practice(l[1],l[2],l[3]); }; });
+  }
+  draw();
+  $("#pa").onclick=()=>{ let i=0; const nx=()=>{ if(i>=d.lines.length){ draw(); return;} draw(-1,i); const l=d.lines[i++]; speak(l[1],false,()=>setTimeout(nx,700)); }; nx(); };
+  $("#rp").onclick=()=>rolePlay();
+  function rolePlay(){
+    let i=0;
+    const step=()=>{
+      if(i>=d.lines.length){ draw(); box.insertAdjacentHTML("afterbegin",`<div class="notice" style="margin-bottom:10px">Well done — dialogue complete. Try it again without looking at the pronunciation guide.</div>`); markActivity(); return; }
+      const l=d.lines[i];
+      draw(i,i);
+      if(l[0]==="A"){ speak(l[1],false,()=>{ i++; setTimeout(step,500); }); }
+      else{
+        const bub=box.querySelectorAll(".line")[i].querySelector(".bubble");
+        bub.insertAdjacentHTML("beforeend",`<div class="row" style="margin-top:8px"><span class="small" style="color:var(--accent);font-weight:600">Your turn — say it in Russian</span><button class="btn acc sm" id="chk">${ICON.mic} Check me</button><button class="btn pri sm" id="rev">Reveal &amp; hear</button></div><div id="rres"></div>`);
+        bub.scrollIntoView({block:"center",behavior:"smooth"});
+        $("#chk",box).onclick=()=>{ $("#rres",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(l[1],r=>{ if(r.error){ $("#rres",box).innerHTML=`<div class="notice w" style="margin-top:8px">${esc(r.error)}</div>`; return;} const pct=Math.round(r.score*100); $("#rres",box).innerHTML=`<div class="result ${pct>=85?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}»</div>`; }); };
+        $("#rev",box).onclick=()=>{ bub.querySelector(".masked").classList.remove("masked"); speak(l[1],false,()=>{ i++; setTimeout(step,900); }); $("#rev",box).disabled=true; };
+      }
+    };
+    step();
+  }
+}
+
+/* ---------- READ ---------- */
+const lettersOf = w => new Set(strip(w).toLowerCase().replace(/[^а-яё]/g,""));
+function allowedLetters(){ const s=new Set(); LETTERS.forEach(l=>{ if(S.readGroups.includes(l[8])) s.add(l[1]); }); return s; }
+function readableWords(){ const a=allowedLetters(); return WORDS.filter(w=>[...lettersOf(w[0])].every(c=>a.has(c))); }
+function groupChips(){ return `<div class="row">${[1,2,3,4,5].map(g=>`<button class="chip ${S.readGroups.includes(g)?"on":""}" data-g="${g}" title="${esc(GROUPS[g][1])}">${g} · ${GROUPS[g][0]} <span class="ru">${LETTERS.filter(l=>l[8]===g).map(l=>l[1]).join(" ")}</span></button>`).join("")}</div>`; }
+function bindGroupChips(app, redraw){ app.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{ const g=+b.dataset.g; if(S.readGroups.includes(g)){ if(S.readGroups.length>1) S.readGroups=S.readGroups.filter(x=>x!==g); } else S.readGroups.push(g); save(); redraw(); }); }
+let readMode="aloud";
+function vRead(app){
+  const words=readableWords();
+  app.innerHTML=`<h1>Reading practice</h1><p class="lead">Choose which letter groups to include — you only get words you can actually decode. Read each word <b>out loud</b> before you check.</p>
+  ${groupChips()}
+  <div class="row" style="margin:14px 0"><button class="chip ${readMode==="aloud"?"on":""}" data-m="aloud">Read aloud</button><button class="chip ${readMode==="quiz"?"on":""}" data-m="quiz">Pick the pronunciation</button><span class="small muted">${words.length} words available</span></div>
+  <div class="card" id="rbox" style="max-width:620px"></div>`;
+  bindGroupChips(app, ()=>vRead(app));
+  app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{ readMode=b.dataset.m; vRead(app); });
+  const box=$("#rbox");
+  if(words.length<4){ box.innerHTML=`<p>Only ${words.length} word(s) use just these letters. Add the next group to get going.</p>`; return; }
+  let order=shuffle(words), i=0, score=0;
+  function next(){
+    if(i>=order.length){ order=shuffle(words); i=0; }
+    const w=order[i++];
+    if(readMode==="aloud"){
+      box.innerHTML=`<div class="small muted">Read this out loud:</div><div class="qbig">${stressHTML(w[0])}</div>
+      <div id="rv" style="text-align:center;min-height:70px"></div>
+      <div class="row" style="justify-content:center"><button class="btn pri" id="sh">Check — hear it</button><button class="btn acc" id="ck">${ICON.mic} Check my reading</button></div>`;
+      const reveal=()=>{ $("#rv",box).innerHTML=`<div class="ph" style="font-size:18px">${phHTML(w[1])}</div><div class="en">${esc(w[2])}</div>`; };
+      $("#sh",box).onclick=()=>{ reveal(); speak(w[0]); markActivity(); $("#sh",box).outerHTML=`<button class="btn sm" id="ag">${ICON.play} Again</button><button class="btn sm" id="sl">${ICON.slow}</button><button class="btn pri" id="nx">Next →</button>`; $("#ag",box).onclick=()=>speak(w[0]); $("#sl",box).onclick=()=>speak(w[0],true); $("#nx",box).onclick=next; };
+      $("#ck",box).onclick=()=>{ $("#rv",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(w[0],r=>{ if(r.error){ $("#rv",box).innerHTML=`<div class="notice w">${esc(r.error)}</div>`; return; } markActivity(); const pct=Math.round(r.score*100); $("#rv",box).innerHTML=`<div class="result ${pct>=85?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}» — <span class="ph">${phHTML(w[1])}</span> · ${esc(w[2])}</div>`; }); };
+    } else {
+      const opts=shuffle([w,...shuffle(words.filter(x=>x!==w)).slice(0,3)]);
+      box.innerHTML=`<div class="row" style="justify-content:space-between"><span class="small muted">How is this pronounced?</span><span class="small muted">Score ${score}</span></div><div class="qbig">${stressHTML(w[0])}</div>
+      <div class="opts">${opts.map(o=>`<button class="opt" data-w="${esc(o[0])}"><span class="ph" style="font-size:17px">${phHTML(o[1])}</span></button>`).join("")}</div><div id="fb" style="min-height:50px;margin-top:10px"></div>`;
+      box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+        if(box.dataset.lock==="1") return; box.dataset.lock="1";
+        const ok=b.dataset.w===w[0]; if(ok) score++; markActivity();
+        b.classList.add(ok?"right":"wrong"); [...box.querySelectorAll(".opt")].find(x=>x.dataset.w===w[0]).classList.add("right");
+        speak(w[0]);
+        $("#fb",box).innerHTML=`<div class="row" style="justify-content:space-between"><span><b>${esc(w[2])}</b></span><button class="btn pri sm" id="nx">Next →</button></div>`;
+        $("#nx",box).onclick=()=>{ box.dataset.lock="0"; next(); };
+      });
+      box.dataset.lock="0";
+    }
+  }
+  next();
+}
+
+/* ---------- WRITE ---------- */
+let writeTab="trace", traceIdx=0, traceStyle="cursive", traceCase="both";
+const PHON = {q:"я",w:"ш",e:"е",r:"р",t:"т",y:"ы",u:"у",i:"и",o:"о",p:"п","[":"ю","]":"щ",a:"а",s:"с",d:"д",f:"ф",g:"г",h:"х",j:"й",k:"к",l:"л",";":"ч","'":"э",z:"з",x:"ж",c:"ц",v:"в",b:"б",n:"н",m:"м","`":"ё","-":"ь","=":"ъ"};
+const PHON_REV = Object.fromEntries(Object.entries(PHON).map(([k,v])=>[v,k]));
+function vWrite(app){
+  app.innerHTML=`<h1>Writing</h1><p class="lead">Russians write by hand in a joined-up script that looks quite different from print. Trace the letters to learn the shapes, then test your spelling with dictation.</p>
+  <div class="row" style="margin-bottom:14px"><button class="chip ${writeTab==="trace"?"on":""}" data-t="trace">Trace letters</button><button class="chip ${writeTab==="dict"?"on":""}" data-t="dict">Dictation</button></div>
+  <div id="wbox"></div>`;
+  app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{ writeTab=b.dataset.t; vWrite(app); });
+  if(writeTab==="trace") traceView($("#wbox")); else dictView($("#wbox"));
+}
+function traceView(box){
+  box.innerHTML=`<div class="strip" id="strip">${LETTERS.map((l,i)=>`<button class="${i===traceIdx?"on":""}" data-i="${i}">${l[0]}</button>`).join("")}</div>
+  <div class="row" style="margin:8px 0 10px"><button class="chip ${traceStyle==="cursive"?"on":""}" data-s="cursive">Handwriting</button><button class="chip ${traceStyle==="print"?"on":""}" data-s="print">Print</button>
+   <span style="width:10px"></span><button class="chip ${traceCase==="both"?"on":""}" data-c="both">Аа</button><button class="chip ${traceCase==="upper"?"on":""}" data-c="upper">А</button><button class="chip ${traceCase==="lower"?"on":""}" data-c="lower">а</button></div>
+  <div class="canvas-wrap"><canvas id="cv"></canvas></div>
+  <div class="row" style="margin-top:10px;justify-content:space-between">
+    <div class="row"><button class="btn sm" id="clr">Clear</button><button class="btn sm" id="gd">Hide guide</button><button class="btn sm" id="snd">${ICON.play} <span class="ru" id="exw"></span></button></div>
+    <div class="row"><button class="btn sm" id="pv">← Prev</button><button class="btn pri sm" id="nx">Next →</button></div>
+  </div>
+  <div class="card small" style="margin-top:14px;line-height:1.9"><b>Handwriting notes.</b> Handwritten <span class="cursive" style="font-size:22px">т</span> looks like an English “m”, <span class="cursive" style="font-size:22px">и</span> like “u”, <span class="cursive" style="font-size:22px">п</span> like “n”, and <span class="cursive" style="font-size:22px">д</span> like “g”. Letters such as л, м and я start with a small hook at the bottom left. Russians often put a line over <span class="cursive" style="font-size:22px">т</span> and under <span class="cursive" style="font-size:22px">ш</span> to tell similar letters apart.</div>`;
+  const cv=$("#cv",box), ctx=cv.getContext("2d");
+  let strokes=[], cur=null, guide=true;
+  const l=LETTERS[traceIdx];
+  $("#exw",box).innerHTML=stressHTML(l[5]);
+  function size(){ const w=cv.parentElement.clientWidth; const h=Math.round(Math.min(320, Math.max(220,w*0.5))); const dpr=window.devicePixelRatio||1; cv.width=w*dpr; cv.height=h*dpr; cv.style.height=h+"px"; ctx.setTransform(dpr,0,0,dpr,0,0); draw(); }
+  function draw(){
+    const w=cv.clientWidth, h=cv.clientHeight, cs=getComputedStyle(document.documentElement);
+    ctx.clearRect(0,0,w,h);
+    const base=h*0.74, cap=h*0.18, xh=h*0.42;
+    ctx.strokeStyle=cs.getPropertyValue("--line"); ctx.lineWidth=1;
+    [cap,xh,base].forEach((y,i)=>{ ctx.setLineDash(i===1?[6,6]:[]); ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); });
+    ctx.setLineDash([]);
+    if(guide){
+      const txt = traceCase==="both"? l[0]+" "+l[1] : traceCase==="upper"? l[0] : l[1];
+      const fam = traceStyle==="cursive" ? '"Marck Script"' : '"PT Serif"';
+      let fs = (base-cap)*1.25; ctx.font=`${fs}px ${fam}`;
+      const tw=ctx.measureText(txt).width; if(tw>w*0.9){ fs*=w*0.9/tw; ctx.font=`${fs}px ${fam}`; }
+      ctx.fillStyle=cs.getPropertyValue("--muted"); ctx.globalAlpha=0.22; ctx.textAlign="center"; ctx.textBaseline="alphabetic";
+      ctx.fillText(txt, w/2, base); ctx.globalAlpha=1;
+    }
+    ctx.strokeStyle=cs.getPropertyValue("--accent"); ctx.lineWidth=Math.max(5,h/45); ctx.lineCap="round"; ctx.lineJoin="round";
+    strokes.forEach(s=>{ ctx.beginPath(); s.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); if(s.length===1) ctx.lineTo(s[0][0]+.1,s[0][1]); ctx.stroke(); });
+  }
+  const pos=e=>{ const r=cv.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; };
+  cv.onpointerdown=e=>{ cv.setPointerCapture(e.pointerId); cur=[pos(e)]; strokes.push(cur); draw(); };
+  cv.onpointermove=e=>{ if(!cur) return; cur.push(pos(e)); draw(); };
+  cv.onpointerup=cv.onpointercancel=()=>{ if(cur){ cur=null; } };
+  $("#clr",box).onclick=()=>{ strokes=[]; draw(); };
+  $("#gd",box).onclick=e=>{ guide=!guide; e.currentTarget.textContent=guide?"Hide guide":"Show guide"; draw(); };
+  $("#snd",box).onclick=()=>speak(l[5]);
+  $("#pv",box).onclick=()=>{ traceIdx=(traceIdx+32)%33; traceView(box); };
+  $("#nx",box).onclick=()=>{ traceIdx=(traceIdx+1)%33; markActivity(); traceView(box); };
+  box.querySelectorAll("#strip button").forEach(b=>b.onclick=()=>{ traceIdx=+b.dataset.i; traceView(box); });
+  box.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{ traceStyle=b.dataset.s; traceView(box); });
+  box.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ traceCase=b.dataset.c; traceView(box); });
+  $("#strip",box).querySelector(".on").scrollIntoView({inline:"center",block:"nearest"});
+  size();
+  (document.fonts? document.fonts.load('60px "Marck Script"').then(()=>document.fonts.load('60px "PT Serif"')) : Promise.resolve()).then(draw).catch(()=>{});
+  window.onresize=()=>{ if(curView==="write"&&writeTab==="trace") size(); };
+}
+function dictView(box){
+  const words=readableWords();
+  box.innerHTML=`<p class="small muted" style="margin-top:0">Listen to a word and type it in Cyrillic. Use the on-screen keyboard, or your normal keyboard with phonetic mapping (a→а, b→б, d→д… shown on each key).</p>
+  ${groupChips()}
+  <div class="card" style="margin-top:12px;max-width:640px">
+    <div class="row" style="justify-content:space-between"><div class="row"><button class="btn pri" id="pl">${ICON.play} Listen</button><button class="btn" id="ps">${ICON.slow} Slowly</button><button class="btn sm" id="hint">Show meaning</button></div><span class="small muted" id="sc"></span></div>
+    <div id="mean" class="en" style="min-height:22px;margin:8px 0"></div>
+    <input class="dict-in" id="inp" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type what you hear…">
+    <label class="sw small" style="margin-top:8px"><input type="checkbox" id="phm" ${S.settings.phonetic?"checked":""}> Phonetic mapping for my physical keyboard</label>
+    <div class="kb" id="kb"></div>
+    <div class="row" style="margin-top:12px"><button class="btn acc" id="ck">Check</button><button class="btn" id="giv">Show answer</button><button class="btn" id="nx">Skip →</button></div>
+    <div id="fb"></div>
+  </div>`;
+  bindGroupChips(box, ()=>dictView(box));
+  if(words.length<3){ $("#fb",box).innerHTML=`<p>Add more letter groups to get words.</p>`; return; }
+  const inp=$("#inp",box);
+  const rows=["йцукенгшщзхъ","фывапролджэ","ячсмитьбюё"];
+  $("#kb",box).innerHTML=rows.map(r=>`<div class="r">${[...r].map(c=>`<button data-k="${c}">${c}<small>${esc(PHON_REV[c]||"")}</small></button>`).join("")}</div>`).join("")+`<div class="r"><button class="wide" data-k=" ">space</button><button class="wide" data-k="⌫">⌫ delete</button></div>`;
+  $("#kb",box).querySelectorAll("button").forEach(b=>b.onclick=()=>{ const k=b.dataset.k; if(k==="⌫") inp.value=inp.value.slice(0,-1); else inp.value+=k; inp.focus(); });
+  $("#phm",box).onchange=e=>{ S.settings.phonetic=e.target.checked; save(); };
+  inp.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){ e.preventDefault(); check(); return; }
+    if(!S.settings.phonetic || e.ctrlKey||e.metaKey||e.altKey) return;
+    const k=e.key.toLowerCase(); if(PHON[k]){ e.preventDefault(); const s=inp.selectionStart, en=inp.selectionEnd; let ch=PHON[k]; if(e.key!==k && e.key.length===1) ch=ch.toUpperCase(); inp.value=inp.value.slice(0,s)+ch+inp.value.slice(en); inp.selectionStart=inp.selectionEnd=s+1; }
+  });
+  let order=shuffle(words), i=0, w=null, right=0, tries=0, answered=false;
+  function next(){ if(i>=order.length){order=shuffle(words);i=0;} w=order[i++]; answered=false; inp.value=""; $("#fb",box).innerHTML=""; $("#mean",box).textContent=""; $("#nx",box).textContent="Skip →"; speak(w[0]); inp.focus(); $("#sc",box).textContent=tries?`${right}/${tries} correct`:""; }
+  function diffHTML(typed, target){ const t=strip(target).toLowerCase(), u=typed.toLowerCase(); return [...t].map((c,k)=>`<span class="${(u[k]===c||(c==="ё"&&u[k]==="е"))?"d-ok":"d-no"}">${esc(c)}</span>`).join(""); }
+  function check(){
+    if(!inp.value.trim()||answered) return;
+    const ok = norm(inp.value)===norm(w[0]);
+    tries++; if(ok) right++; markActivity(); answered=true;
+    $("#fb",box).innerHTML = ok
+      ? `<div class="result good"><b>Correct!</b> <span class="ru" style="font-size:20px">${stressHTML(w[0])}</span> — ${esc(w[2])}</div>`
+      : `<div class="result low"><b>Not quite.</b> You wrote: <span class="ru diff" style="font-size:20px">${esc(inp.value)}</span><br>Correct: <span class="ru diff" style="font-size:20px">${diffHTML(inp.value,w[0])}</span> &nbsp;<span class="ph">${phHTML(w[1])}</span> — ${esc(w[2])}</div>`;
+    $("#nx",box).textContent="Next →"; $("#sc",box).textContent=`${right}/${tries} correct`;
+  }
+  $("#pl",box).onclick=()=>speak(w[0]); $("#ps",box).onclick=()=>speak(w[0],true);
+  $("#hint",box).onclick=()=>{ $("#mean",box).textContent="Meaning: "+w[2]; };
+  $("#ck",box).onclick=check;
+  $("#giv",box).onclick=()=>{ if(!answered){ tries++; answered=true; } $("#fb",box).innerHTML=`<div class="result mid"><span class="ru" style="font-size:20px">${stressHTML(w[0])}</span> <span class="ph">${phHTML(w[1])}</span> — ${esc(w[2])}</div>`; $("#nx",box).textContent="Next →"; speak(w[0]); };
+  $("#nx",box).onclick=next;
+  // first word: wait for click to play audio (browsers need a gesture)
+  w=order[i++]; $("#fb",box).innerHTML=`<p class="small muted">Press <b>Listen</b> to hear the first word.</p>`;
+}
+
+/* ---------- REVIEW ---------- */
+function vReview(app){
+  const due=shuffle(dueItems()), nw=nextNew(newAvailable());
+  const queue=[...due, ...nw.map(x=>({...x,isNew:true}))];
+  app.innerHTML=`<h1>Daily review</h1><p class="lead">Spaced repetition: cards you know come back less often, cards you miss come back today. Always answer <b>out loud</b> before revealing.</p>
+  <div class="card" id="rv" style="max-width:640px"></div>
+  <p class="small muted" style="margin-top:12px">New cards per day: <select id="npd">${[5,10,15,20,30].map(n=>`<option ${n===S.settings.newPerDay?"selected":""}>${n}</option>`).join("")}</select></p>`;
+  $("#npd").onchange=e=>{ S.settings.newPerDay=+e.target.value; save(); vReview(app); };
+  const box=$("#rv"); let done=0; const total=queue.length;
+  if(!total){ box.innerHTML=`<h3>All done for today 🎉</h3><p class="muted">Come back tomorrow, or practise a dialogue in the meantime.</p><a class="btn pri" href="#dialogues">Go to dialogues</a>`; return; }
+  function show(){
+    if(!queue.length){ box.innerHTML=`<h3>Review complete</h3><p class="muted">${done} cards done. ${learnedCount()} words &amp; phrases are now well learned.</p><a class="btn pri" href="#home">Back to Today</a>`; return; }
+    const it=queue[0], dir = it.isNew ? "ru" : (Math.random()<.5?"ru":"en");
+    box.innerHTML=`<div class="progress"><i style="width:${done/(done+queue.length)*100}%"></i></div>
+     <div class="row" style="justify-content:space-between;margin-top:10px"><span class="small muted">${it.isNew?"<b style='color:var(--accent)'>New</b> · ":""}${esc(it.kind)}</span><span class="small muted">${queue.length} left</span></div>
+     ${dir==="ru"
+       ? `<div class="small muted" style="margin-top:12px">Listen and read. What does it mean? Say it back.</div><div class="big">${stressHTML(it.ru)}</div><div class="row"><button class="btn sm" id="pl">${ICON.play}</button><button class="btn sm" id="ps">${ICON.slow}</button></div>`
+       : `<div class="small muted" style="margin-top:12px">Say this in Russian, out loud:</div><div class="big" style="font-family:'Golos Text';font-size:30px">${esc(it.en)}</div>`}
+     <div id="ans" style="min-height:10px"></div>
+     <div class="row" style="margin-top:14px" id="acts"><button class="btn pri" id="show">Show answer</button>${dir==="en"?`<button class="btn acc" id="ck">${ICON.mic} Check my answer</button>`:""}</div>`;
+    if(dir==="ru"){ speak(it.ru); $("#pl",box).onclick=()=>speak(it.ru); $("#ps",box).onclick=()=>speak(it.ru,true); }
+    const reveal=()=>{
+      $("#ans",box).insertAdjacentHTML("beforeend", dir==="ru"
+        ? `<div style="margin-top:12px"><div class="ph">${phHTML(it.ph)}</div><div style="font-size:18px">${esc(it.en)}</div>${it.note?`<div class="note">${esc(it.note)}</div>`:""}</div>`
+        : `<div style="margin-top:12px"><div class="ru" style="font-size:28px">${stressHTML(it.ru)}</div><div class="ph">${phHTML(it.ph)}</div>${it.note?`<div class="note">${esc(it.note)}</div>`:""}<div class="row" style="margin-top:6px"><button class="btn sm" id="pl2">${ICON.play}</button><button class="btn sm" id="ps2">${ICON.slow}</button><button class="btn sm" id="pr2">${ICON.mic} Practise</button></div></div>`);
+      if(dir==="en"){ speak(it.ru); $("#pl2",box).onclick=()=>speak(it.ru); $("#ps2",box).onclick=()=>speak(it.ru,true); $("#pr2",box).onclick=()=>practice(it.ru,it.ph,it.en,it.note); }
+      $("#acts",box).innerHTML=`<button class="btn bad" data-g="0">Again</button><button class="btn ok" data-g="1">Good</button><button class="btn" data-g="2">Easy</button><span class="small muted">How well did you know it?</span>`;
+      $("#acts",box).querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{ const g=+b.dataset.g; grade(it.id,g); queue.shift(); done++; if(g===0) queue.splice(Math.min(queue.length,3),0,{...it,isNew:false}); show(); });
+    };
+    $("#show",box).onclick=reveal;
+    const ck=$("#ck",box); if(ck) ck.onclick=()=>{ $("#ans",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(it.ru,r=>{ if(r.error){ $("#ans",box).innerHTML=`<div class="notice w" style="margin-top:10px">${esc(r.error)}</div>`; return; } const pct=Math.round(r.score*100); $("#ans",box).innerHTML=`<div class="result ${pct>=85?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}»</div>`; reveal(); }); };
+  }
+  show();
+}
+
+/* ---------- SETTINGS ---------- */
+$("#setBtn").onclick=()=>{
+  loadVoices();
+  openModal(`<h2 style="margin-top:0">Settings</h2>
+   <h3>Russian voice</h3>
+   ${voices.length?`<select id="vs">${voices.map(v=>`<option ${getVoice()&&getVoice().name===v.name?"selected":""}>${esc(v.name)}</option>`).join("")}</select>`:voiceNotice()}
+   <h3 style="margin-top:16px">Speaking speed</h3>
+   <div class="row"><input type="range" id="rt" min="0.6" max="1.2" step="0.05" value="${S.settings.rate}"><span id="rtv">${S.settings.rate}</span><button class="btn sm" id="tst">${ICON.play} Test</button></div>
+   <h3 style="margin-top:16px">Display</h3>
+   <label class="sw"><input type="checkbox" id="sp" ${S.settings.showPh?"checked":""}> Show pronunciation guide (turn off to force real reading)</label>
+   <h3 style="margin-top:16px">Speech checking</h3>
+   <p class="small" style="margin:0">${micState==="ok"?"Working.":micState==="unsupported"?MIC_MSG.unsupported:micState==="blocked"?MIC_MSG.blocked:"Not tested yet. Try “Say it & check” on any phrase. On the hosted page the microphone is blocked; the downloadable copy opened in Chrome or Edge supports it."}</p>
+   <h3 style="margin-top:16px">Progress</h3>
+   <p class="small muted" style="margin:0 0 8px">Saved automatically${cloud.ref?" to your account":" in this browser"}.</p>
+   <button class="btn sm bad" id="rs">Reset all progress</button><span id="rsc"></span>`, sh=>{
+     const vs=$("#vs",sh); if(vs) vs.onchange=()=>{ S.settings.voice=vs.value; save(); speak("Приве́т! Как дела́?"); };
+     $("#rt",sh).oninput=e=>{ S.settings.rate=+e.target.value; $("#rtv",sh).textContent=S.settings.rate; save(); };
+     $("#tst",sh).onclick=()=>speak("Здра́вствуйте! Меня́ зову́т Лора́н.");
+     $("#sp",sh).onchange=e=>{ S.settings.showPh=e.target.checked; applySettings(); save(); };
+     $("#rs",sh).onclick=()=>{ $("#rsc",sh).innerHTML=` <span class="small">Sure? </span><button class="btn sm bad" id="rsy">Yes, reset</button>`; $("#rsy",sh).onclick=()=>{ const keep=S.settings; S=structuredClone(DEFAULT); S.settings=keep; save(); closeModal(); route(); toast("Progress reset."); }; };
+  });
+};
+
+applySettings(); route(); initCloud();
+</script>
+</body>
+</html>
