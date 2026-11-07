@@ -323,8 +323,8 @@ const PHRASES = {
 };
 // dialogues: lines [speaker A|B, ru, phonetic, meaning]; you play B
 const DIALOGUES = [
- {title:"Знако́мство",en:"Meeting someone",lines:[
-  ["A","Здра́вствуйте! Меня́ зову́т А́нна.","ZDRAST-vooy-tye! mi-NYA za-VOOT A-na","Hello! My name is Anna."],
+ {title:"Знако́мство",en:"Meeting Inessa",who:"И",lines:[
+  ["A","Здра́вствуйте! Меня́ зову́т Ине́сса.","ZDRAST-vooy-tye! mi-NYA za-VOOT i-NYE-sa","Hello! My name is Inessa."],
   ["B","Здра́вствуйте! Меня́ зову́т Лора́н. О́чень прия́тно.","ZDRAST-vooy-tye! mi-NYA za-VOOT la-RAN. O-chin' pri-YAT-na","Hello! My name is Laurent. Nice to meet you."],
   ["A","Мне то́же. Отку́да вы?","mnye TO-zhe. at-KOO-da vy","Likewise. Where are you from?"],
   ["B","Я из Фра́нции, но живу́ в Жене́ве.","ya iz FRAN-tsy-i, no zhy-VOO vzhy-NYE-vye","I'm from France, but I live in Geneva."],
@@ -864,7 +864,7 @@ function vDialogues(app){
   const box=$("#dbox");
   function draw(mask=-1, cur=-1){
     box.innerHTML=d.lines.map((l,i)=>{ const me=l[0]==="B"; const hidden=me && mask>=0 && i>=mask;
-      return `<div class="line ${me?"me":""} ${i===cur?"cur":""}"><div class="who">${me?"Я":"A"}</div><div class="bubble">
+      return `<div class="line ${me?"me":""} ${i===cur?"cur":""}"><div class="who">${me?"Я":(d.who||"A")}</div><div class="bubble">
       <div class="${hidden?"masked":""}"><div class="ru">${stressHTML(l[1])}</div><div class="ph">${phHTML(l[2])}</div></div>
       <div class="en">${esc(l[3])}</div>
       <div class="row" style="margin-top:6px"><button class="btn sm" data-i="${i}" data-a="l">${ICON.play}</button><button class="btn sm" data-i="${i}" data-a="s">${ICON.slow}</button><button class="btn sm" data-i="${i}" data-a="p">${ICON.mic} Practise</button></div></div></div>`; }).join("");
