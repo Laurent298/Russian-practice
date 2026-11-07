@@ -509,6 +509,7 @@ function speak(text, slow=false, onend){
     if(!v && !voices.length) toast("No Russian voice found on this device — see Settings.");
   }catch(e){ toast("Couldn't play audio."); }
 }
+function speakThen(text, cb, pause=600){ let fired=false; const go=()=>{ if(fired) return; fired=true; clearTimeout(t); setTimeout(cb,pause); }; const t=setTimeout(go, 1500+strip(text).length*110); speak(text,false,go); }
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let micState = SR ? "unknown" : "unsupported"; // unknown | ok | blocked | unsupported
 const MIC_MSG = {
@@ -873,19 +874,24 @@ function vDialogues(app){
   draw();
   $("#pa").onclick=()=>{ let i=0; const nx=()=>{ if(i>=d.lines.length){ draw(); rec("dialogues", null); return;} draw(-1,i); const l=d.lines[i++]; speak(l[1],false,()=>setTimeout(nx,700)); }; nx(); };
   $("#rp").onclick=()=>rolePlay();
+  let token=0;
   function rolePlay(){
-    let i=0;
+    token++; let i=0;
     const step=()=>{
       if(i>=d.lines.length){ draw(); box.insertAdjacentHTML("afterbegin",`<div class="notice" style="margin-bottom:10px">Well done — dialogue complete. Try it again without looking at the pronunciation guide.</div>`); rec("dialogues", null); return; }
       const l=d.lines[i];
       draw(i,i);
-      if(l[0]==="A"){ speak(l[1],false,()=>{ i++; setTimeout(step,500); }); }
+      if(l[0]==="A"){ const my=++token; speakThen(l[1],()=>{ if(my!==token) return; i++; step(); },500); }
       else{
         const bub=box.querySelectorAll(".line")[i].querySelector(".bubble");
         bub.insertAdjacentHTML("beforeend",`<div class="row" style="margin-top:8px"><span class="small" style="color:var(--accent);font-weight:600">Your turn — say it in Russian</span><button class="btn acc sm" id="chk">${ICON.mic} Check me</button><button class="btn pri sm" id="rev">Reveal &amp; hear</button></div><div id="rres"></div>`);
         bub.scrollIntoView({block:"center",behavior:"smooth"});
-        $("#chk",box).onclick=()=>{ $("#rres",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(l[1],r=>{ if(r.error){ $("#rres",box).innerHTML=`<div class="notice w" style="margin-top:8px">${esc(r.error)}</div>`; return;} rec("speak", r.score>=0.85); const pct=Math.round(r.score*100); $("#rres",box).innerHTML=`<div class="result ${pct>=85?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}»</div>`; }); };
-        $("#rev",box).onclick=()=>{ bub.querySelector(".masked").classList.remove("masked"); speak(l[1],false,()=>{ i++; setTimeout(step,900); }); $("#rev",box).disabled=true; };
+        let moved=false;
+        const advance=()=>{ if(moved) return; moved=true; const m=bub.querySelector(".masked"); if(m) m.classList.remove("masked"); $("#chk",box).disabled=true; $("#rev",box).disabled=true; const my=++token; speakThen(l[1],()=>{ if(my!==token) return; i++; step(); },900); };
+        $("#chk",box).onclick=()=>{ if(moved) return; $("#rres",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(l[1],r=>{ if(r.error){ $("#rres",box).innerHTML=`<div class="notice w" style="margin-top:8px">${esc(r.error)}</div>`; return;} const ok=r.score>=0.85; rec("speak", ok); const pct=Math.round(r.score*100);
+          $("#rres",box).innerHTML=`<div class="result ${ok?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}»${ok?" — well done, moving on…":`<div class="heard" style="color:var(--ink)">${wordDiff(l[1],r.heard)}</div><div class="small">Try again, or press Reveal &amp; hear.</div>`}</div>`;
+          if(ok) setTimeout(advance,900); }); };
+        $("#rev",box).onclick=advance;
       }
     };
     step();
