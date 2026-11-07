@@ -446,7 +446,7 @@ const GOALS = {
  read:{n:10,unit:"words read",title:"Read real words",k:"кот",href:"#read",desc:"Only words made of letters you can decode."},
  phrases:{n:5,unit:"phrases practised",title:"Everyday phrases",k:"Приве́т!",href:"#phrases",desc:"Listen and repeat out loud."},
  dialogues:{n:1,unit:"dialogue",title:"Role-play a dialogue",k:"А: … Я: …",href:"#dialogues",desc:"Play your side of a real conversation."},
- write:{n:8,unit:"letters or words",title:"Write & spell",k:"Пиши́",cursive:true,href:"#write",desc:"Trace letters or do dictation."},
+ write:{n:10,unit:"letters or words",title:"Write & spell",k:"Пиши́",cursive:true,href:"#write",desc:"Trace letters or do dictation."},
  review:{n:1,unit:"",title:"Daily review",k:"↻",href:"#review",desc:"Spaced-repetition flashcards."}
 };
 const SKILLS = [["alphabet","Letters"],["sounds","Listening"],["read","Reading"],["write","Spelling"],["speak","Speaking"],["review","Review recall"]];
@@ -951,10 +951,19 @@ const PHON_REV = Object.fromEntries(Object.entries(PHON).map(([k,v])=>[v,k]));
 function vWrite(app){
   app.innerHTML=`<h1>Writing</h1><p class="lead">Russians write by hand in a joined-up script that looks quite different from print. Trace the letters to learn the shapes, then test your spelling with dictation.</p>
   <div class="row" style="margin-bottom:14px"><button class="chip ${writeTab==="trace"?"on":""}" data-t="trace">Trace letters</button><button class="chip ${writeTab==="dict"?"on":""}" data-t="dict">Dictation</button></div>
+  <div id="wgoal" style="max-width:640px;margin-bottom:12px"></div>
   <div id="wbox"></div>`;
   app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{ writeTab=b.dataset.t; vWrite(app); });
+  updWGoal();
   if(writeTab==="trace") traceView($("#wbox")); else dictView($("#wbox"));
 }
+function updWGoal(){
+  const el=$("#wgoal"); if(!el) return; const st=goalState("write");
+  el.innerHTML = st.done
+    ? `<div class="result good" style="margin:0"><b>✓ 10/10 — writing done for today.</b> You can stop here; extra practice still counts.</div>`
+    : `<div class="small muted">Today: <b>${st.val}/${st.n}</b> letters traced or words spelled</div><div class="meter"><i style="width:${st.val/st.n*100}%"></i></div>`;
+}
+function writeGoalJustDone(){ const d=(S.days[today()]||{}).write; return d && d.done===GOALS.write.n; }
 function traceView(box){
   box.innerHTML=`<div class="strip" id="strip">${LETTERS.map((l,i)=>`<button class="${i===traceIdx?"on":""}" data-i="${i}">${l[0]}</button>`).join("")}</div>
   <div class="row" style="margin:8px 0 10px"><button class="chip ${traceStyle==="cursive"?"on":""}" data-s="cursive">Handwriting</button><button class="chip ${traceStyle==="print"?"on":""}" data-s="print">Print</button>
@@ -996,7 +1005,7 @@ function traceView(box){
   $("#gd",box).onclick=e=>{ guide=!guide; e.currentTarget.textContent=guide?"Hide guide":"Show guide"; draw(); };
   $("#snd",box).onclick=()=>speak(l[5]);
   $("#pv",box).onclick=()=>{ traceIdx=(traceIdx+32)%33; traceView(box); };
-  $("#nx",box).onclick=()=>{ traceIdx=(traceIdx+1)%33; rec("write", null); traceView(box); };
+  $("#nx",box).onclick=()=>{ traceIdx=(traceIdx+1)%33; rec("write", null); updWGoal(); if(writeGoalJustDone()) toast("✓ Writing goal reached — 10/10 for today"); traceView(box); };
   box.querySelectorAll("#strip button").forEach(b=>b.onclick=()=>{ traceIdx=+b.dataset.i; traceView(box); });
   box.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{ traceStyle=b.dataset.s; traceView(box); });
   box.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ traceCase=b.dataset.c; traceView(box); });
@@ -1041,11 +1050,13 @@ function dictView(box){
       ? `<div class="result good"><b>Correct!</b> <span class="ru" style="font-size:20px">${stressHTML(w[0])}</span> — ${esc(w[2])}</div>`
       : `<div class="result low"><b>Not quite.</b> You wrote: <span class="ru diff" style="font-size:20px">${esc(inp.value)}</span><br>Correct: <span class="ru diff" style="font-size:20px">${diffHTML(inp.value,w[0])}</span> &nbsp;<span class="ph">${phHTML(w[1])}</span> — ${esc(w[2])}</div>`;
     $("#nx",box).textContent="Next →"; $("#sc",box).textContent=`${right}/${tries} correct`;
+    afterWrite();
   }
+  function afterWrite(){ updWGoal(); if(writeGoalJustDone()){ $("#fb",box).insertAdjacentHTML("beforeend",`<div class="result good"><b>✓ That's 10 — writing done for today.</b><div class="row" style="margin-top:8px"><a class="btn pri sm" href="#home">Back to Today</a><span class="small">or press Next to keep going.</span></div></div>`); } }
   $("#pl",box).onclick=()=>speak(w[0]); $("#ps",box).onclick=()=>speak(w[0],true);
   $("#hint",box).onclick=()=>{ $("#mean",box).textContent="Meaning: "+w[2]; };
   $("#ck",box).onclick=check;
-  $("#giv",box).onclick=()=>{ if(!answered){ tries++; answered=true; rec("write", false, "words", w[0]); } $("#fb",box).innerHTML=`<div class="result mid"><span class="ru" style="font-size:20px">${stressHTML(w[0])}</span> <span class="ph">${phHTML(w[1])}</span> — ${esc(w[2])}</div>`; $("#nx",box).textContent="Next →"; speak(w[0]); };
+  $("#giv",box).onclick=()=>{ if(!answered){ tries++; answered=true; rec("write", false, "words", w[0]); setTimeout(afterWrite,0); } $("#fb",box).innerHTML=`<div class="result mid"><span class="ru" style="font-size:20px">${stressHTML(w[0])}</span> <span class="ph">${phHTML(w[1])}</span> — ${esc(w[2])}</div>`; $("#nx",box).textContent="Next →"; speak(w[0]); };
   $("#nx",box).onclick=next;
   // first word: wait for click to play audio (browsers need a gesture)
   w=order[i++]; $("#fb",box).innerHTML=`<p class="small muted">Press <b>Listen</b> to hear the first word.</p>`;
