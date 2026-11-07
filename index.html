@@ -137,6 +137,9 @@ canvas{display:block;width:100%;touch-action:none}
 .exb .ph{font-size:13px;display:block}
 .exb .en{font-size:12.5px;display:block}
 .go.done{border-color:var(--ok);background:var(--ok-soft)}
+.pc.done{border-color:var(--ok);background:var(--ok-soft)}
+.pc .dn{display:none;float:right;color:var(--ok);font-weight:600;font-size:13px}
+.pc.done .dn{display:inline}
 .go .gl{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--muted)}
 .go.done .gl b{color:var(--ok)}
 .meter{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:5px}
@@ -821,29 +824,32 @@ function earTrainer(box){
 
 function phraseCard(p){
   const [ru,ph,en,note]=p;
-  return `<div class="card pc"><div class="ru">${stressHTML(ru)}</div><div class="ph">${phHTML(ph)}</div><div class="en">${esc(en)}</div>${note?`<div class="note">${esc(note)}</div>`:""}
+  const dn=((S.days[today()]||{}).ps||[]).includes(ru);
+  return `<div class="card pc ${dn?"done":""}"><span class="dn">✓ Done today</span><div class="ru">${stressHTML(ru)}</div><div class="ph">${phHTML(ph)}</div><div class="en">${esc(en)}</div>${note?`<div class="note">${esc(note)}</div>`:""}
   <div class="row acts"><button class="btn pri sm" data-a="l">${ICON.play} Listen</button><button class="btn sm" data-a="s">${ICON.slow} Slowly</button><button class="btn sm" data-a="p">${ICON.mic} Practise</button></div></div>`;
 }
 let phraseCat="Greetings";
 function vPhrases(app){
   const cats=Object.keys(PHRASES);
-  app.innerHTML=`<h1>Everyday phrases</h1><p class="lead">The building blocks of a first conversation. Listen, repeat out loud, then use <b>Practise</b> to drill one in depth. Every phrase also feeds your daily review.</p>
-  <div class="row" id="cats">${cats.map(c=>`<button class="chip ${c===phraseCat?"on":""}" data-c="${c}">${c}</button>`).join("")}</div>
+  app.innerHTML=`<h1>Everyday phrases</h1><p class="lead">The building blocks of a first conversation. Listen, repeat out loud, then use <b>Practise</b> to drill one in depth. Every phrase also feeds your daily review. Phrases you've worked on today turn green.</p>
+  <div class="row" id="cats">${cats.map(c=>`<button class="chip ${c===phraseCat?"on":""}" data-c="${c}">${c} <span class="cn small"></span></button>`).join("")}</div>
   <div class="row" style="margin:12px 0"><button class="btn sm" id="all">${ICON.play} Play all in this set</button><label class="sw small"><input type="checkbox" id="tph" ${S.settings.showPh?"checked":""}> Show pronunciation guide</label></div>
   <div class="grid g2" id="plist"></div>`;
   const list=$("#plist");
+  const counts=()=>{ const ps=(S.days[today()]||{}).ps||[]; app.querySelectorAll("#cats .chip").forEach(b=>{ const L=PHRASES[b.dataset.c], n=L.filter(p=>ps.includes(p[0])).length; b.querySelector(".cn").textContent=n?`${n}/${L.length}`+(n===L.length?" ✓":""):""; }); };
+  const mark=(c,ru)=>{ notePhrase(ru); c.classList.add("done"); counts(); };
   function draw(){
     list.innerHTML=PHRASES[phraseCat].map(phraseCard).join("");
     list.querySelectorAll(".pc").forEach((c,i)=>{ const p=PHRASES[phraseCat][i];
-      c.querySelector('[data-a="l"]').onclick=()=>{ speak(p[0]); notePhrase(p[0]); };
-      c.querySelector('[data-a="s"]').onclick=()=>{ speak(p[0],true); notePhrase(p[0]); };
-      c.querySelector('[data-a="p"]').onclick=()=>{ notePhrase(p[0]); practice(...p); };
+      c.querySelector('[data-a="l"]').onclick=()=>{ speak(p[0]); mark(c,p[0]); };
+      c.querySelector('[data-a="s"]').onclick=()=>{ speak(p[0],true); mark(c,p[0]); };
+      c.querySelector('[data-a="p"]').onclick=()=>{ mark(c,p[0]); practice(...p); };
     });
   }
   app.querySelectorAll("#cats .chip").forEach(b=>b.onclick=()=>{ phraseCat=b.dataset.c; app.querySelectorAll("#cats .chip").forEach(x=>x.classList.toggle("on",x===b)); draw(); });
   $("#tph").onchange=e=>{ S.settings.showPh=e.target.checked; applySettings(); save(); };
-  $("#all").onclick=()=>{ const ps=PHRASES[phraseCat]; let i=0; const cards=list.querySelectorAll(".pc"); const nx=()=>{ cards.forEach(c=>c.style.outline=""); if(i>=ps.length) return; cards[i].style.outline="2px solid var(--accent)"; cards[i].scrollIntoView({block:"nearest",behavior:"smooth"}); notePhrase(ps[i][0]); speak(ps[i][0],false,()=>setTimeout(nx,1600)); i++; }; nx(); };
-  draw();
+  $("#all").onclick=()=>{ const ps=PHRASES[phraseCat]; let i=0; const cards=list.querySelectorAll(".pc"); const nx=()=>{ cards.forEach(c=>c.style.outline=""); if(i>=ps.length) return; cards[i].style.outline="2px solid var(--accent)"; cards[i].scrollIntoView({block:"nearest",behavior:"smooth"}); mark(cards[i],ps[i][0]); speak(ps[i][0],false,()=>setTimeout(nx,1600)); i++; }; nx(); };
+  draw(); counts();
 }
 
 let dlgIdx=0;
