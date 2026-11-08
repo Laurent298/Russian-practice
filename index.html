@@ -927,10 +927,13 @@ function vRead(app){
     if(readMode==="aloud"){
       box.innerHTML=`<div class="small muted">Read this out loud:</div><div class="qbig">${stressHTML(w[0])}</div>
       <div id="rv" style="text-align:center;min-height:70px"></div>
-      <div class="row" style="justify-content:center"><button class="btn pri" id="sh">Check — hear it</button><button class="btn acc" id="ck">${ICON.mic} Check my reading</button></div>`;
+      <div class="row" style="justify-content:center" id="ra"><button class="btn pri" id="sh">Check — hear it</button><button class="btn acc" id="ck">${ICON.mic} Check my reading</button></div>`;
       const reveal=()=>{ $("#rv",box).innerHTML=`<div class="ph" style="font-size:18px">${phHTML(w[1])}</div><div class="en">${esc(w[2])}</div>`; };
-      $("#sh",box).onclick=()=>{ reveal(); speak(w[0]); rec("read", null); $("#sh",box).outerHTML=`<button class="btn sm" id="ag">${ICON.play} Again</button><button class="btn sm" id="sl">${ICON.slow}</button><button class="btn pri" id="nx">Next →</button>`; $("#ag",box).onclick=()=>speak(w[0]); $("#sl",box).onclick=()=>speak(w[0],true); $("#nx",box).onclick=next; };
-      $("#ck",box).onclick=()=>{ $("#rv",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(w[0],r=>{ if(r.error){ $("#rv",box).innerHTML=`<div class="notice w">${esc(r.error)}</div>`; return; } rec("speak", r.score>=0.85); const pct=Math.round(r.score*100); $("#rv",box).innerHTML=`<div class="result ${pct>=85?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}» — <span class="ph">${phHTML(w[1])}</span> · ${esc(w[2])}</div>`; }); };
+      let counted=false; const countRead=()=>{ if(!counted){ counted=true; rec("read", null); } };
+      const after=(retry)=>{ countRead(); $("#ra",box).innerHTML=`<button class="btn sm" id="ag">${ICON.play} Hear it</button><button class="btn sm" id="sl">${ICON.slow}</button>${retry?`<button class="btn acc sm" id="ck2">${ICON.mic} Try again</button>`:""}<button class="btn pri" id="nx">Next →</button>`; $("#ag",box).onclick=()=>speak(w[0]); $("#sl",box).onclick=()=>speak(w[0],true); $("#nx",box).onclick=next; const c2=$("#ck2",box); if(c2) c2.onclick=check; };
+      const check=()=>{ $("#rv",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(w[0],r=>{ if(r.error){ $("#rv",box).innerHTML=`<div class="notice w">${esc(r.error)}</div>`; return; } const ok=r.score>=0.85; rec("speak", ok); const pct=Math.round(r.score*100); $("#rv",box).innerHTML=`<div class="result ${ok?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}» — <span class="ph">${phHTML(w[1])}</span> · ${esc(w[2])}${ok?"":`<div class="heard" style="color:var(--ink)">${wordDiff(w[0],r.heard)}</div>`}</div>`; if(!ok) speak(w[0],true); after(!ok); }); };
+      $("#sh",box).onclick=()=>{ reveal(); speak(w[0]); after(false); };
+      $("#ck",box).onclick=check;
     } else {
       const opts=shuffle([w,...shuffle(words.filter(x=>x!==w)).slice(0,3)]);
       box.innerHTML=`<div class="row" style="justify-content:space-between"><span class="small muted">How is this pronounced?</span><span class="small muted">Score ${score}</span></div><div class="qbig">${stressHTML(w[0])}</div>
