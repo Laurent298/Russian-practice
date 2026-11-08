@@ -51,6 +51,9 @@ p.lead{color:var(--muted);margin:0 0 18px;max-width:680px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 14px;font-weight:500;font-size:14.5px;display:inline-flex;align-items:center;gap:6px}
 .btn:hover{border-color:var(--muted)}
+a.btn{text-decoration:none;color:inherit}
+a.btn.pri{color:var(--bg)}
+a.btn.acc{color:#fff}
 .btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .btn.acc{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn.sm{padding:5px 10px;font-size:13.5px;border-radius:8px}
@@ -912,7 +915,7 @@ function bindGroupChips(app, redraw){ app.querySelectorAll("[data-g]").forEach(b
 let readMode="aloud";
 function vRead(app){
   const words=readableWords();
-  app.innerHTML=`<h1>Reading practice</h1><p class="lead">Choose which letter groups to include — you only get words you can actually decode. Read each word <b>out loud</b> before you check.</p>
+  app.innerHTML=`<h1>Reading practice</h1><p class="lead">Choose which letter groups to include — you only get words you can actually decode. Rounds of 10 words with a score at the end. Read each word <b>out loud</b> before you check.</p>
   ${groupChips()}
   <div class="row" style="margin:14px 0"><button class="chip ${readMode==="aloud"?"on":""}" data-m="aloud">Read aloud</button><button class="chip ${readMode==="quiz"?"on":""}" data-m="quiz">Pick the pronunciation</button><span class="small muted">${words.length} words available</span></div>
   <div class="card" id="rbox" style="max-width:620px"></div>`;
@@ -920,36 +923,60 @@ function vRead(app){
   app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{ readMode=b.dataset.m; vRead(app); });
   const box=$("#rbox");
   if(words.length<4){ box.innerHTML=`<p>Only ${words.length} word(s) use just these letters. Add the next group to get going.</p>`; return; }
-  let order=shuffle(words), i=0, score=0;
+  const ROUND=10;
+  let order=[], i=0, results=[];
+  function start(){ order=[]; while(order.length<ROUND) order.push(...shuffle(words)); order=order.slice(0,ROUND); i=0; results=[]; next(); }
+  const header=()=>{ const s=results.filter(r=>r.ok).length; return `<div class="progress"><i style="width:${i/ROUND*100}%"></i></div><div class="row" style="justify-content:space-between;margin:8px 0 4px"><span class="small muted">Word ${Math.min(i+1,ROUND)} of ${ROUND}</span><span class="small muted">Score ${s}/${results.length}</span></div>`; };
+  function record(w, ok){ results.push({w, ok}); rec("read", ok, "words", w[0]); }
+  function finish(){
+    const s=results.filter(r=>r.ok).length, missed=results.filter(r=>!r.ok);
+    const msg = s===ROUND ? "Perfect round!" : s>=8 ? "Very good reading." : s>=5 ? "Good progress — keep going." : "Keep at it — replay the missed words below.";
+    box.innerHTML=`<div class="progress"><i style="width:100%"></i></div>
+      <div style="text-align:center;margin:18px 0 6px"><div class="small muted">Round complete</div><div class="qbig" style="margin:4px 0">${s}/${ROUND}</div><div>${msg}</div></div>
+      ${missed.length?`<div class="small muted" style="margin:14px 0 6px">Words to look at again (tap to hear):</div><div class="weak">${missed.map((r,k)=>`<button data-k="${k}"><span class="ru">${stressHTML(r.w[0])}</span> <span class="ph">${phHTML(r.w[1])}</span> · ${esc(r.w[2])}</button>`).join("")}</div>`:""}
+      <div class="row" style="justify-content:center;margin-top:18px"><button class="btn acc" id="again">Another ${ROUND} words</button><a class="btn" href="#home">Back to Today</a></div>`;
+    box.querySelectorAll(".weak [data-k]").forEach(b=>b.onclick=()=>speak(missed[+b.dataset.k].w[0]));
+    $("#again",box).onclick=start;
+  }
   function next(){
-    if(i>=order.length){ order=shuffle(words); i=0; }
-    const w=order[i++];
+    if(i>=ROUND){ finish(); return; }
+    const w=order[i];
+    const advance=()=>{ i++; next(); };
     if(readMode==="aloud"){
-      box.innerHTML=`<div class="small muted">Read this out loud:</div><div class="qbig">${stressHTML(w[0])}</div>
+      let scored=false;
+      box.innerHTML=`${header()}<div class="small muted">Read this out loud:</div><div class="qbig">${stressHTML(w[0])}</div>
       <div id="rv" style="text-align:center;min-height:70px"></div>
-      <div class="row" style="justify-content:center" id="ra"><button class="btn pri" id="sh">Check — hear it</button><button class="btn acc" id="ck">${ICON.mic} Check my reading</button></div>`;
-      const reveal=()=>{ $("#rv",box).innerHTML=`<div class="ph" style="font-size:18px">${phHTML(w[1])}</div><div class="en">${esc(w[2])}</div>`; };
-      let counted=false; const countRead=()=>{ if(!counted){ counted=true; rec("read", null); } };
-      const after=(retry)=>{ countRead(); $("#ra",box).innerHTML=`<button class="btn sm" id="ag">${ICON.play} Hear it</button><button class="btn sm" id="sl">${ICON.slow}</button>${retry?`<button class="btn acc sm" id="ck2">${ICON.mic} Try again</button>`:""}<button class="btn pri" id="nx">Next →</button>`; $("#ag",box).onclick=()=>speak(w[0]); $("#sl",box).onclick=()=>speak(w[0],true); $("#nx",box).onclick=next; const c2=$("#ck2",box); if(c2) c2.onclick=check; };
-      const check=()=>{ $("#rv",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(w[0],r=>{ if(r.error){ $("#rv",box).innerHTML=`<div class="notice w">${esc(r.error)}</div>`; return; } const ok=r.score>=0.85; rec("speak", ok); const pct=Math.round(r.score*100); $("#rv",box).innerHTML=`<div class="result ${ok?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}» — <span class="ph">${phHTML(w[1])}</span> · ${esc(w[2])}${ok?"":`<div class="heard" style="color:var(--ink)">${wordDiff(w[0],r.heard)}</div>`}</div>`; if(!ok) speak(w[0],true); after(!ok); }); };
-      $("#sh",box).onclick=()=>{ reveal(); speak(w[0]); after(false); };
+      <div class="row" style="justify-content:center" id="ra"><button class="btn acc" id="ck">${ICON.mic} Check my reading</button><button class="btn" id="sh">Hear it &amp; grade myself</button></div>`;
+      const ra=$("#ra",box), rv=$("#rv",box);
+      const reveal=()=>{ rv.innerHTML=`<div class="ph" style="font-size:18px">${phHTML(w[1])}</div><div class="en">${esc(w[2])}</div>`; };
+      const after=(retry)=>{ ra.innerHTML=`<button class="btn sm" id="ag">${ICON.play} Hear it</button><button class="btn sm" id="sl">${ICON.slow}</button>${retry?`<button class="btn acc sm" id="ck2">${ICON.mic} Try again</button>`:""}<button class="btn pri" id="nx">${i+1>=ROUND?"See my score →":"Next →"}</button>`; $("#ag",box).onclick=()=>speak(w[0]); $("#sl",box).onclick=()=>speak(w[0],true); $("#nx",box).onclick=advance; const c2=$("#ck2",box); if(c2) c2.onclick=check; };
+      const check=()=>{ rv.innerHTML=`<div class="result mid">Listening…</div>`; listen(w[0],r=>{
+          if(r.error){ rv.innerHTML=`<div class="notice w">${esc(r.error)}</div>`; return; }
+          const ok=r.score>=0.85; rec("speak", ok); const pct=Math.round(r.score*100);
+          if(!scored){ scored=true; record(w, ok); }
+          rv.innerHTML=`<div class="result ${ok?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}» — <span class="ph">${phHTML(w[1])}</span> · ${esc(w[2])}${ok?"":`<div class="heard" style="color:var(--ink)">${wordDiff(w[0],r.heard)}</div><div class="small">Your first try counts for the score; retry as much as you like.</div>`}</div>`;
+          if(!ok) speak(w[0],true); after(!ok); }); };
       $("#ck",box).onclick=check;
+      $("#sh",box).onclick=()=>{ reveal(); speak(w[0]);
+        ra.innerHTML=`<button class="btn sm" id="ag">${ICON.play}</button><button class="btn ok" id="yes">✓ I read it right</button><button class="btn bad" id="no">✗ I got it wrong</button>`;
+        $("#ag",box).onclick=()=>speak(w[0]);
+        $("#yes",box).onclick=()=>{ record(w,true); advance(); }; $("#no",box).onclick=()=>{ record(w,false); advance(); }; };
     } else {
       const opts=shuffle([w,...shuffle(words.filter(x=>x!==w)).slice(0,3)]);
-      box.innerHTML=`<div class="row" style="justify-content:space-between"><span class="small muted">How is this pronounced?</span><span class="small muted">Score ${score}</span></div><div class="qbig">${stressHTML(w[0])}</div>
+      box.innerHTML=`${header()}<div class="small muted">How is this pronounced?</div><div class="qbig">${stressHTML(w[0])}</div>
       <div class="opts">${opts.map(o=>`<button class="opt" data-w="${esc(o[0])}"><span class="ph" style="font-size:17px">${phHTML(o[1])}</span></button>`).join("")}</div><div id="fb" style="min-height:50px;margin-top:10px"></div>`;
+      let locked=false;
       box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
-        if(box.dataset.lock==="1") return; box.dataset.lock="1";
-        const ok=b.dataset.w===w[0]; if(ok) score++; rec("read", ok, "words", w[0]);
+        if(locked) return; locked=true;
+        const ok=b.dataset.w===w[0]; record(w, ok);
         b.classList.add(ok?"right":"wrong"); [...box.querySelectorAll(".opt")].find(x=>x.dataset.w===w[0]).classList.add("right");
         speak(w[0]);
-        $("#fb",box).innerHTML=`<div class="row" style="justify-content:space-between"><span><b>${esc(w[2])}</b></span><button class="btn pri sm" id="nx">Next →</button></div>`;
-        $("#nx",box).onclick=()=>{ box.dataset.lock="0"; next(); };
+        $("#fb",box).innerHTML=`<div class="row" style="justify-content:space-between"><span><b>${esc(w[2])}</b></span><button class="btn pri sm" id="nx">${i+1>=ROUND?"See my score →":"Next →"}</button></div>`;
+        $("#nx",box).onclick=advance;
       });
-      box.dataset.lock="0";
     }
   }
-  next();
+  start();
 }
 
 /* ---------- WRITE ---------- */
