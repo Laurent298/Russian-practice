@@ -450,7 +450,7 @@ function currentStreak(){
 /* ---------- progress tracking ---------- */
 const GOALS = {
  alphabet:{n:12,unit:"quiz answers",title:"Learn the alphabet",k:"Аа Бб",href:"#alphabet",desc:"33 letters in 5 groups, with sounds and a quiz."},
- sounds:{n:10,unit:"ear-training rounds",title:"Master the sounds",k:"о → а",href:"#sounds",desc:"8 accent rules, plus ear training."},
+ sounds:{n:10,unit:"ear-training rounds",title:"Master the sounds",k:"о → а",href:"#sounds",desc:"Hear every example in the 8 rules, or do one ear-training round."},
  read:{n:10,unit:"words read",title:"Read real words",k:"кот",href:"#read",desc:"Only words made of letters you can decode."},
  phrases:{n:5,unit:"phrases practised",title:"Everyday phrases",k:"Приве́т!",href:"#phrases",desc:"Listen and repeat out loud."},
  dialogues:{n:1,unit:"dialogue",title:"Role-play a dialogue",k:"А: … Я: …",href:"#dialogues",desc:"Play your side of a real conversation."},
@@ -467,6 +467,8 @@ function rec(mod, ok, cat, key){
   const ks=Object.keys(S.days).sort(); while(ks.length>120) delete S.days[ks.shift()];
   markActivity();
 }
+function rulesDoneCount(d){ const h=(d&&d.rx)||[]; return RULES.filter(r=>r.ex.every(e=>h.includes(e[0]))).length; }
+function noteExample(ru){ const d=day(); d.rx=d.rx||[]; if(!d.rx.includes(ru)){ d.rx.push(ru); markActivity(); } }
 function notePhrase(ru){ const d=day(); d.ps=d.ps||[]; if(!d.ps.includes(ru)){ d.ps.push(ru); markActivity(); } }
 function mastered(U){ const e=(S.stats.letters||{})[U]; return S.known.includes(U) || (e && e[0]>=3 && e[0]/e[1]>=0.75); }
 const masteredCount = () => LETTERS.filter(l=>mastered(l[0])).length;
@@ -475,6 +477,7 @@ function reviewLeft(){ return dueItems().length + Math.min(newAvailable(), nextN
 function goalState(k, dateKey){
   const isToday=!dateKey||dateKey===today(); const d=S.days[dateKey||today()]||{}; const g=GOALS[k];
   if(k==="review"){ const left=isToday?reviewLeft():null; const done=!!d.reviewDone||(isToday&&left===0); return {val:done?1:0,n:1,done,txt:done?"Done for today":left+" cards left"}; }
+  if(k==="sounds"){ const ear=(d.sounds&&d.sounds.done)||0, rules=rulesDoneCount(d); const done=ear>=10||rules>=RULES.length; const val=done?10:Math.max(Math.min(ear,10),Math.round(rules*10/RULES.length)); return {val,n:10,done,txt:`${Math.min(ear,10)}/10 ear training · ${rules}/${RULES.length} rules`}; }
   const raw = k==="phrases" ? (d.ps||[]).length : ((d[k]&&d[k].done)||0);
   const val=Math.min(raw,g.n); return {val,n:g.n,done:raw>=g.n,txt:`${val}/${g.n} ${g.unit}`};
 }
@@ -799,12 +802,22 @@ function exBtn(e){ return `<button class="exb" data-ru="${esc(e[0])}"><span clas
 function vSounds(app){
   app.innerHTML=`<h1>Sounds &amp; pronunciation</h1><p class="lead">Russian spelling is fairly regular once you know these eight rules. Tap any example to hear it, and say it back each time.</p>
   ${voiceNotice()}
-  <div class="grid g2" id="rules">${RULES.map(r=>`<div class="card rule"><h3>${r.t}</h3><div class="small">${r.b}</div><div class="ex">${r.ex.map(exBtn).join("")}</div>${r.foot?`<div class="small muted" style="margin-top:8px">${r.foot}</div>`:""}</div>`).join("")}</div>
+  <div id="sgoal" style="max-width:680px;margin-bottom:14px"></div>
+  <div class="grid g2" id="rules">${RULES.map((r,ri)=>`<div class="card rule pc" data-r="${ri}"><span class="dn">✓ Done today</span><h3>${r.t}</h3><div class="small">${r.b}</div><div class="ex">${r.ex.map(exBtn).join("")}</div>${r.foot?`<div class="small muted" style="margin-top:8px">${r.foot}</div>`:""}</div>`).join("")}</div>
   <h2>Ear training</h2>
   <p class="lead">You'll hear one word from a pair that differs by a single sound. Pick the one you heard. This trains your ear for the contrasts that matter most: ы / и, and hard / soft consonants.</p>
   <div class="card" id="ear"></div>`;
-  app.querySelectorAll(".exb").forEach(b=>b.onclick=()=>speak(b.dataset.ru));
+  const heard=()=>((S.days[today()]||{}).rx||[]);
+  const paint=()=>{ const h=heard(); app.querySelectorAll("#rules .rule").forEach(c=>{ const r=RULES[+c.dataset.r]; c.classList.toggle("done", r.ex.every(e=>h.includes(e[0]))); c.querySelectorAll(".exb").forEach(b=>b.style.borderColor=h.includes(b.dataset.ru)?"var(--ok)":""); }); updSGoal(); };
+  app.querySelectorAll(".exb").forEach(b=>b.onclick=()=>{ speak(b.dataset.ru); noteExample(b.dataset.ru); paint(); });
+  paint();
   earTrainer($("#ear"));
+}
+function updSGoal(){
+  const el=$("#sgoal"); if(!el) return; const st=goalState("sounds");
+  el.innerHTML = st.done
+    ? `<div class="result good" style="margin:0"><b>✓ Sounds done for today.</b> Extra practice still counts.</div>`
+    : `<div class="small muted">Today: <b>${st.txt}</b> — hear every example in all 8 rules (each card turns green), <i>or</i> finish one ear-training round below.</div><div class="meter"><i style="width:${st.val/st.n*100}%"></i></div>`;
 }
 function earTrainer(box){
   let n=0, score=0; const total=10;
@@ -819,7 +832,7 @@ function earTrainer(box){
     $("#pp",box).onclick=()=>speak(target); $("#psl",box).onclick=()=>speak(target,true);
     box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
       if(box.dataset.lock==="1") return; box.dataset.lock="1";
-      const ok=b.dataset.w===target; if(ok) score++; rec("sounds", ok, "pairs", p[4]);
+      const ok=b.dataset.w===target; if(ok) score++; rec("sounds", ok, "pairs", p[4]); updSGoal();
       b.classList.add(ok?"right":"wrong"); [...box.querySelectorAll(".opt")].find(x=>x.dataset.w===target).classList.add("right");
       $("#fb",box).innerHTML=`<div class="row"><span>${ok?"Right.":"That was <b class='ru'>"+stressHTML(target)+"</b>."} Compare:</span><button class="btn sm" id="ca">${stressHTML(p[0])}</button><button class="btn sm" id="cb">${stressHTML(p[2])}</button><button class="btn pri sm" id="nx">Next →</button></div>`;
       $("#ca",box).onclick=()=>speak(p[0]); $("#cb",box).onclick=()=>speak(p[2]); $("#nx",box).onclick=()=>{n++;box.dataset.lock="0";q();};
