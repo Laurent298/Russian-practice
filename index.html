@@ -603,7 +603,6 @@ function practice(ru, ph, en, note){
       });
     };
     $("#rec",sh).onclick=e=>toggleRecord(e.currentTarget, ()=>{ const b=$("#mine",sh); b.disabled=false; b.onclick=()=>{ const a=new Audio(lastRecURL); a.onended=()=>speak(ru); a.play().catch(()=>{}); }; toast("Recorded. “Play mine” plays you, then the model."); });
-    speak(ru);
   });
 }
 
@@ -835,12 +834,12 @@ function phraseCard(p){
   const [ru,ph,en,note]=p;
   const dn=((S.days[today()]||{}).ps||[]).includes(ru);
   return `<div class="card pc ${dn?"done":""}"><span class="dn">✓ Done today</span><div class="ru">${stressHTML(ru)}</div><div class="ph">${phHTML(ph)}</div><div class="en">${esc(en)}</div>${note?`<div class="note">${esc(note)}</div>`:""}
-  <div class="row acts"><button class="btn pri sm" data-a="l">${ICON.play} Listen</button><button class="btn sm" data-a="s">${ICON.slow} Slowly</button><button class="btn sm" data-a="p">${ICON.mic} Practise</button></div></div>`;
+  <div class="row acts"><button class="btn acc sm" data-a="say">${ICON.mic} Say it</button><button class="btn sm" data-a="l">${ICON.play} Listen</button><button class="btn sm" data-a="s">${ICON.slow} Slowly</button><button class="btn sm" data-a="p">More…</button></div><div class="pres"></div></div>`;
 }
 let phraseCat="Greetings";
 function vPhrases(app){
   const cats=Object.keys(PHRASES);
-  app.innerHTML=`<h1>Everyday phrases</h1><p class="lead">The building blocks of a first conversation. Listen, repeat out loud, then use <b>Practise</b> to drill one in depth. Every phrase also feeds your daily review. Phrases you've worked on today turn green.</p>
+  app.innerHTML=`<h1>Everyday phrases</h1><p class="lead">The building blocks of a first conversation. Try each one first with <b>Say it</b> — your score appears right on the card — then <b>Listen</b> to compare. Every phrase also feeds your daily review. Phrases you've worked on today turn green.</p>
   <div class="row" id="cats">${cats.map(c=>`<button class="chip ${c===phraseCat?"on":""}" data-c="${c}">${c} <span class="cn small"></span></button>`).join("")}</div>
   <div class="row" style="margin:12px 0"><button class="btn sm" id="all">${ICON.play} Play all in this set</button><label class="sw small"><input type="checkbox" id="tph" ${S.settings.showPh?"checked":""}> Show pronunciation guide</label></div>
   <div class="grid g2" id="plist"></div>`;
@@ -853,6 +852,17 @@ function vPhrases(app){
       c.querySelector('[data-a="l"]').onclick=()=>{ speak(p[0]); mark(c,p[0]); };
       c.querySelector('[data-a="s"]').onclick=()=>{ speak(p[0],true); mark(c,p[0]); };
       c.querySelector('[data-a="p"]').onclick=()=>{ mark(c,p[0]); practice(...p); };
+      const sayBtn=c.querySelector('[data-a="say"]'), out=c.querySelector('.pres');
+      sayBtn.onclick=()=>{
+        if(sayBtn.disabled) return; sayBtn.disabled=true; sayBtn.innerHTML=`${ICON.mic} Listening…`;
+        out.innerHTML=`<div class="result mid">Speak now…</div>`;
+        listen(p[0], r=>{
+          sayBtn.disabled=false; sayBtn.innerHTML=`${ICON.mic} Say it again`;
+          if(r.error){ out.innerHTML=`<div class="notice w" style="margin-top:10px">${esc(r.error)}</div>`; return; }
+          const ok=r.score>=0.85, pct=Math.round(r.score*100); rec("speak", ok); mark(c,p[0]);
+          out.innerHTML=`<div class="result ${ok?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · ${ok?"well understood.":"heard «"+esc(r.heard)+"»"}${ok?"":`<div class="heard" style="color:var(--ink)">${wordDiff(p[0],r.heard)}</div><div class="small">Press Listen to compare, then say it again.</div>`}</div>`;
+        }, /^\d+$/.test(p[2])?[p[2]]:[]);
+      };
     });
   }
   app.querySelectorAll("#cats .chip").forEach(b=>b.onclick=()=>{ phraseCat=b.dataset.c; app.querySelectorAll("#cats .chip").forEach(x=>x.classList.toggle("on",x===b)); draw(); });
