@@ -872,13 +872,15 @@ function vPhrases(app){
 }
 
 let dlgIdx=0;
+function dialogueDone(idx){ const d=day(); d.dl=d.dl||[]; if(!d.dl.includes(idx)) d.dl.push(idx); rec("dialogues", null); }
 function vDialogues(app){
   const d=DIALOGUES[dlgIdx];
   app.innerHTML=`<h1>Dialogues</h1><p class="lead">Short real-life exchanges. Listen to the whole thing first, then switch to <b>role-play</b>: the app speaks the other person, and you say your lines (marked <b style="color:var(--accent)">Я</b>) out loud.</p>
-  <div class="row" id="dl">${DIALOGUES.map((x,i)=>`<button class="chip ${i===dlgIdx?"on":""}" data-i="${i}"><span class="ru">${stressHTML(x.title)}</span> · ${esc(x.en)}</button>`).join("")}</div>
+  <div class="row" id="dl">${DIALOGUES.map((x,i)=>`<button class="chip ${i===dlgIdx?"on":""}" data-i="${i}"><span class="ru">${stressHTML(x.title)}</span> · ${esc(x.en)}<b class="ck" style="color:var(--ok)"></b></button>`).join("")}</div>
   <div class="row" style="margin:14px 0"><button class="btn pri" id="pa">${ICON.play} Listen to all</button><button class="btn acc" id="rp">Role-play: I'm “Я”</button></div>
   <div id="dbox"></div>`;
   app.querySelectorAll("#dl .chip").forEach(b=>b.onclick=()=>{ dlgIdx=+b.dataset.i; vDialogues(app); });
+  function refreshChips(){ const dn=(S.days[today()]||{}).dl||[]; app.querySelectorAll("#dl .chip").forEach(b=>{ const k=b.querySelector(".ck"); if(k) k.textContent=dn.includes(+b.dataset.i)?" ✓":""; }); }
   const box=$("#dbox");
   function draw(mask=-1, cur=-1){
     box.innerHTML=d.lines.map((l,i)=>{ const me=l[0]==="B"; const hidden=me && mask>=0 && i>=mask;
@@ -889,14 +891,15 @@ function vDialogues(app){
     box.querySelectorAll("button[data-a]").forEach(b=>{ const l=d.lines[+b.dataset.i];
       b.onclick=()=>{ if(b.dataset.a==="l") speak(l[1]); else if(b.dataset.a==="s") speak(l[1],true); else practice(l[1],l[2],l[3]); }; });
   }
-  draw();
-  $("#pa").onclick=()=>{ let i=0; const nx=()=>{ if(i>=d.lines.length){ draw(); rec("dialogues", null); return;} draw(-1,i); const l=d.lines[i++]; speak(l[1],false,()=>setTimeout(nx,700)); }; nx(); };
+  draw(); refreshChips();
+  $("#pa").onclick=()=>{ const my=++token; let i=0; const nx=()=>{ if(my!==token) return; if(i>=d.lines.length){ draw(); dialogueDone(dlgIdx); refreshChips(); return;} draw(-1,i); const l=d.lines[i++]; speakThen(l[1],nx,700); }; nx(); };
   $("#rp").onclick=()=>rolePlay();
   let token=0;
   function rolePlay(){
-    token++; let i=0;
+    token++; let i=0, recorded=false; const lastMine=d.lines.map(l=>l[0]).lastIndexOf("B");
+    const markDone=()=>{ if(recorded) return; recorded=true; dialogueDone(dlgIdx); refreshChips(); };
     const step=()=>{
-      if(i>=d.lines.length){ draw(); box.insertAdjacentHTML("afterbegin",`<div class="notice" style="margin-bottom:10px">Well done — dialogue complete. Try it again without looking at the pronunciation guide.</div>`); rec("dialogues", null); return; }
+      if(i>=d.lines.length){ draw(); box.insertAdjacentHTML("afterbegin",`<div class="notice" style="margin-bottom:10px">Well done — dialogue complete. Try it again without looking at the pronunciation guide.</div>`); markDone(); return; }
       const l=d.lines[i];
       draw(i,i);
       if(l[0]==="A"){ const my=++token; speakThen(l[1],()=>{ if(my!==token) return; i++; step(); },500); }
@@ -905,7 +908,7 @@ function vDialogues(app){
         bub.insertAdjacentHTML("beforeend",`<div class="row" style="margin-top:8px"><span class="small" style="color:var(--accent);font-weight:600">Your turn — say it in Russian</span><button class="btn acc sm" id="chk">${ICON.mic} Check me</button><button class="btn pri sm" id="rev">Reveal &amp; hear</button></div><div id="rres"></div>`);
         bub.scrollIntoView({block:"center",behavior:"smooth"});
         let moved=false;
-        const advance=()=>{ if(moved) return; moved=true; const m=bub.querySelector(".masked"); if(m) m.classList.remove("masked"); $("#chk",box).disabled=true; $("#rev",box).disabled=true; const my=++token; speakThen(l[1],()=>{ if(my!==token) return; i++; step(); },900); };
+        const advance=()=>{ if(moved) return; moved=true; if(i>=lastMine) markDone(); const m=bub.querySelector(".masked"); if(m) m.classList.remove("masked"); $("#chk",box).disabled=true; $("#rev",box).disabled=true; const my=++token; speakThen(l[1],()=>{ if(my!==token) return; i++; step(); },900); };
         $("#chk",box).onclick=()=>{ if(moved) return; $("#rres",box).innerHTML=`<div class="result mid">Listening…</div>`; listen(l[1],r=>{ if(r.error){ $("#rres",box).innerHTML=`<div class="notice w" style="margin-top:8px">${esc(r.error)}</div>`; return;} const ok=r.score>=0.85; rec("speak", ok); const pct=Math.round(r.score*100);
           $("#rres",box).innerHTML=`<div class="result ${ok?"good":pct>=60?"mid":"low"}"><b>${pct}%</b> · heard «${esc(r.heard)}»${ok?" — well done, moving on…":`<div class="heard" style="color:var(--ink)">${wordDiff(l[1],r.heard)}</div><div class="small">Try again, or press Reveal &amp; hear.</div>`}</div>`;
           if(ok) setTimeout(advance,900); }); };
