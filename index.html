@@ -327,8 +327,49 @@ const PHRASES = {
   ["оди́н","a-DEEN","1"],["два","dva","2"],["три","tree","3"],["четы́ре","chi-TY-rye","4"],["пять","pyat'","5"],
   ["шесть","shest'","6"],["семь","syem'","7"],["во́семь","VO-sim'","8"],["де́вять","DYE-vit'","9"],["де́сять","DYE-sit'","10"],
   ["два́дцать","DVA-tsat'","20"],["сто","sto","100"],["ты́сяча","TY-si-cha","1000"]
+ ],
+ "Time":[
+  ["сейча́с","si-CHAS","now"],["сего́дня","si-VOD-nya","today","г is read “v” here."],["за́втра","ZAF-tra","tomorrow"],["вчера́","fchi-RA","yesterday"],
+  ["у́тром","OO-tram","in the morning"],["днём","dnyom","in the afternoon"],["ве́чером","VYE-chi-ram","in the evening"],["но́чью","NOCH-yu","at night"],
+  ["ско́ро","SKO-ra","soon"],["пото́м","pa-TOM","then / later"],["уже́","oo-ZHE","already"],["ещё","yi-SHCHO","still / more / yet"],
+  ["всегда́","fsig-DA","always"],["никогда́","ni-kag-DA","never"],["иногда́","i-nag-DA","sometimes"],["ча́сто","CHAS-ta","often"],
+  ["ра́но","RA-na","early"],["по́здно","POZ-na","late","The д is silent: “POZ-na”."]
+ ],
+ "Places":[
+  ["здесь","zdyes'","here"],["тут","toot","here (more casual)"],["там","tam","there"],["где","gdye","where (location)"],
+  ["куда́","koo-DA","where to","Russian distinguishes где (where?) from куда́ (where to?)."],["отку́да","at-KOO-da","where from"],
+  ["сле́ва","SLYE-va","on the left"],["спра́ва","SPRA-va","on the right"],["нале́во","na-LYE-va","to the left"],["напра́во","na-PRA-va","to the right"],
+  ["пря́мо","PRYA-ma","straight ahead"],["бли́зко","BLEES-ka","near"],["далеко́","da-li-KO","far"],
+  ["до́ма","DO-ma","at home"],["домо́й","da-MOY","(going) home"],["наверху́","na-vir-KHOO","upstairs / above"],["внизу́","vni-ZOO","downstairs / below"]
+ ],
+ "Questions":[
+  ["кто","kto","who"],["что","shto","what","Written что, said “shto”."],["где","gdye","where"],["когда́","kag-DA","when"],
+  ["почему́","pa-chi-MOO","why"],["заче́м","za-CHEM","what for"],["как","kak","how"],["ско́лько","SKOL'-ka","how much / how many"],
+  ["како́й","ka-KOY","which / what kind of"],["чей","chey","whose"]
+ ],
+ "Pronouns":[
+  ["я","ya","I"],["ты","ty","you (informal)"],["он","on","he"],["она́","a-NA","she"],["оно́","a-NO","it"],
+  ["мы","my","we"],["вы","vy","you (formal or plural)"],["они́","a-NEE","they"],
+  ["мой / моя́","moy / ma-YA","my (masc. / fem.)"],["ваш / ва́ша","vash / VA-sha","your (formal, masc. / fem.)"]
+ ],
+ "Little words":[
+  ["и","i","and"],["а","a","and / whereas (contrast)"],["но","no","but"],["и́ли","EE-li","or"],
+  ["потому́ что","pa-ta-MOO shta","because"],["е́сли","YES-li","if"],["о́чень","O-chin'","very"],["то́же","TO-zhe","also / too"],
+  ["то́лько","TOL'-ka","only"],["мно́го","MNO-ga","a lot / many"],["ма́ло","MA-la","little / few"],["всё","fsyo","everything / all"],
+  ["ничего́","ni-chi-VO","nothing / it's OK","г is read “v” here."],["коне́чно","ka-NYESH-na","of course","ч is read “sh” here."],["наве́рное","na-VYER-na-ye","probably"]
+ ],
+ "Verbs":[
+  ["Я хочу́…","ya kha-CHOO","I want…"],["Я могу́…","ya ma-GOO","I can…"],["Я зна́ю.","ya ZNA-yu","I know."],["Я не зна́ю.","ya ni ZNA-yu","I don't know."],
+  ["Я понима́ю.","ya pa-ni-MA-yu","I understand."],["Я люблю́…","ya lyu-BLYU","I love / like…"],["Я говорю́…","ya ga-va-RYU","I speak…"],
+  ["Я иду́…","ya i-DOO","I'm going… (on foot)","иду́ = on foot, е́ду = by car, train, bus."],["Я е́ду…","ya YE-doo","I'm going… (by transport)"],
+  ["У меня́ есть…","oo mi-NYA yest'","I have…"],["Мне ну́жно…","mnye NOOZH-na","I need…"],["Мне нра́вится…","mnye NRA-vit-sa","I like…"]
+ ],
+ "Days":[
+  ["понеде́льник","pa-ni-DYEL'-nik","Monday"],["вто́рник","FTOR-nik","Tuesday"],["среда́","sri-DA","Wednesday"],["четве́рг","chit-VYERK","Thursday"],
+  ["пя́тница","PYAT-ni-tsa","Friday"],["суббо́та","soo-BO-ta","Saturday"],["воскресе́нье","vas-kri-SYEN'-ye","Sunday"]
  ]
 };
+const PHRASE_GROUPS = {"Conversation":["Greetings","Politeness","About you","Out & about","Numbers"], "Key words":["Time","Places","Questions","Pronouns","Little words","Verbs","Days"]};
 // dialogues: lines [speaker A|B, ru, phonetic, meaning]; you play B
 const DIALOGUES = [
  {title:"Знако́мство",en:"Meeting Inessa",who:"И",lines:[
@@ -600,7 +641,8 @@ function listen(target, onDone, alts){
     done=true; micState="ok";
     const altsOK=alts||[]; const altsArr=[...ev.results[0]].map(a=>a.transcript);
     let best=altsArr[0]||"", bs=-1;
-    altsArr.forEach(a=>{ let s=sim(a,target); if(altsOK.length && altsOK.includes(a.replace(/[\s.,]/g,""))) s=1; if(s>bs){bs=s;best=a;} });
+    const tParts=target.includes("/")?target.split("/").map(t=>t.trim()):[target];
+    altsArr.forEach(a=>{ let s=Math.max(...tParts.map(t=>sim(a,t))); if(altsOK.length && altsOK.includes(a.replace(/[\s.,]/g,""))) s=1; if(s>bs){bs=s;best=a;} });
     onDone({heard:best, score:Math.max(0,bs)});
   };
   rec.onerror = ev => {
@@ -674,7 +716,8 @@ function practice(ru, ph, en, note){
 
 /* ============================== SRS ============================== */
 const ALL_ITEMS = [];
-for(const [cat,list] of Object.entries(PHRASES)) list.forEach(p=>ALL_ITEMS.push({id:"p:"+p[0],ru:p[0],ph:p[1],en:p[2],note:p[3],kind:cat}));
+const WORD_SET=new Set(WORDS.map(w=>w[0]));
+for(const [cat,list] of Object.entries(PHRASES)) list.forEach(p=>{ if(!WORD_SET.has(p[0])) ALL_ITEMS.push({id:"p:"+p[0],ru:p[0],ph:p[1],en:p[2],note:p[3],kind:cat}); });
 WORDS.forEach(w=>ALL_ITEMS.push({id:"w:"+w[0],ru:w[0],ph:w[1],en:w[2],kind:"Word"}));
 const ITEM = Object.fromEntries(ALL_ITEMS.map(i=>[i.id,i]));
 // Interleave: phrases first by category order, words mixed in after the first greetings
@@ -909,14 +952,14 @@ function earTrainer(box){
 function phraseCard(p){
   const [ru,ph,en,note]=p;
   const dn=((S.days[today()]||{}).ps||[]).includes(ru);
-  return `<div class="card pc ${dn?"done":""}"><span class="dn">✓ Done today</span><div class="ru">${stressHTML(ru)}</div><div class="ph">${phHTML(ph)}</div><div class="en">${esc(en)}</div>${note?`<div class="note">${esc(note)}</div>`:""}
+  return `<div class="card pc ${dn?"done":""}"><span class="dn">✓ Done today</span><div class="ru">${stressHTML(ru)}</div><div class="ph">${phHTML(ph)}</div><div class="en">${esc(en)}</div>${note?`<div class="note">${esc(note).replace(/([а-яёА-ЯЁ\u0301]+)/g,'<span class="ru" style="font-size:16px">$1</span>')}</div>`:""}
   <div class="row acts"><button class="btn acc sm" data-a="say">${ICON.mic} Say it</button><button class="btn sm" data-a="l">${ICON.play} Listen</button><button class="btn sm" data-a="s">${ICON.slow} Slowly</button><button class="btn sm" data-a="p">More…</button></div><div class="pres"></div></div>`;
 }
 let phraseCat="Greetings";
 function vPhrases(app){
   const cats=Object.keys(PHRASES);
-  app.innerHTML=`<h1>Everyday phrases</h1><p class="lead">The building blocks of a first conversation. Try each one first with <b>Say it</b> — your score appears right on the card — then <b>Listen</b> to compare. Every phrase also feeds your daily review. Phrases you've worked on today turn green.</p>
-  <div class="row" id="cats">${cats.map(c=>`<button class="chip ${c===phraseCat?"on":""}" data-c="${c}">${c} <span class="cn small"></span></button>`).join("")}</div>
+  app.innerHTML=`<h1>Everyday phrases &amp; key words</h1><p class="lead">The building blocks of a first conversation, plus the small words you'll use in every sentence. Try each one first with <b>Say it</b> — your score appears right on the card — then <b>Listen</b> to compare. Every phrase also feeds your daily review. Phrases you've worked on today turn green.</p>
+  <div id="cats">${Object.entries(PHRASE_GROUPS).map(([g,cs])=>`<div class="row" style="margin-bottom:8px"><span class="small muted" style="width:96px">${g}</span>${cs.map(c=>`<button class="chip ${c===phraseCat?"on":""}" data-c="${c}">${c} <span class="cn small"></span></button>`).join("")}</div>`).join("")}</div>
   <div class="row" style="margin:12px 0"><button class="btn sm" id="all">${ICON.play} Play all in this set</button><label class="sw small"><input type="checkbox" id="tph" ${S.settings.showPh?"checked":""}> Show pronunciation guide</label></div>
   <div class="grid g2" id="plist"></div>`;
   const list=$("#plist");
